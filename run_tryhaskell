@@ -1,0 +1,2 @@
+cp -r  static  ./.cabal-sandbox/share/x86_64-osx-ghc-7.8.3/tryhaskell-0.0/
+env PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell

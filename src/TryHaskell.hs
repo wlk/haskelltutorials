@@ -3,9 +3,25 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings   #-}
-{-# OPTIONS -fno-warn-type-defaults #-}
+{-# OPTIONS -fno-warn-type-defaults -fno-warn-deprecations #-}
 
--- | Try Haskell!
+-- | Try Haskell!  
+
+{-
+    127.0.0.1:4001
+        /static",serveDirectory static => no idea, guess it does not work like it should
+        /eval?exp=6*7 => 42
+        /users => users stats)
+        / => normal home page
+How do I enable SSL?
+
+First, you need to install snap-server with -fopenssl. If you have already installed snap-server, you might want to uninstall it first with ghc-pkg unregister -f snap-server to avoid potential version conflicts.
+
+Once you have done that, run your application as follows using values appropriate to your setup.
+
+./app --ssl-port=443 --ssl-cert=cert.pem --ssl-key=key.pem
+    
+    -}
 
 module TryHaskell where
 
@@ -22,7 +38,6 @@ import           Data.ByteString (ByteString)
 import           Data.ByteString.Lazy (fromChunks)
 import qualified Data.ByteString.Lazy as L (ByteString)
 import qualified Data.Cache.LRU.IO as LRU
-import           Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as M
 import           Data.Hashable
 import           Data.Map (Map)
@@ -35,8 +50,6 @@ import           Data.Text.Encoding (decodeUtf8)
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
 import           Data.Time
-import           Lucid
-import           Lucid.Bootstrap
 import           Prelude hiding (div,head)
 import           PureIO (Interrupt(..),Output(..),Input(..),IOException(..))
 import           Safe
@@ -48,6 +61,10 @@ import           System.Exit
 import           System.IO (stderr, hPutStrLn)
 import           System.Locale
 import           System.Process.Text.Lazy
+import           TryHaskell.BuildPage
+import           TryHaskell.Tutorials
+
+tutorials = map (\tut_no ->("/tutorial"++(show tut_no),tut tut_no stats)) [1] -- [1 .. 12]
 
 data EvalResult
   = ErrorResult !Text
@@ -55,8 +72,8 @@ data EvalResult
   | GetInputResult ![Text] !(Map FilePath String)
   deriving (Show,Eq)
 
-data Stats = Stats
-  { statsUsers :: !(HashMap ByteString UTCTime) }
+--data Stats = Stats
+--  { statsUsers :: !(HashMap ByteString UTCTime) }
 
 type Cache = LRU.AtomicLRU (ByteString, ByteString) Value
 
@@ -86,14 +103,14 @@ startServer cache stats =
            setErrorLog ConfigNoLog .
            setVerbose False
      httpServe (config defaultConfig)
-               (dispatch static cache stats)
+               (dispatch static cache stats) -- so this part is what needs to change to support urls with different names
 
 -- | Ensure mueval is available and working
 checkMuEval :: IO ()
 checkMuEval =
   do result <- mueval False "()"
      case result of
-       Left err -> die err
+       Left err -> die err -- putStrLn $ msg err
        _ -> return ()
   where
     die err = do hPutStrLn stderr ("ERROR: mueval " ++ msg err)
@@ -107,8 +124,11 @@ dispatch static cache stats =
   route [("/static",serveDirectory static)
         ,("/eval",eval cache stats)
         ,("/users",users stats)
-        ,("/",home stats)]
+        ,("/",home stats)
+        ,("/tryhaskell",home stats)
+       ] ++ tutorials
 
+        
 -- | Write out the list of current users.
 users :: MVar Stats -> Snap ()
 users statsv =
@@ -117,7 +137,7 @@ users statsv =
                            (M.toList (statsUsers stats))))
   where epoch :: UTCTime -> Integer
         epoch = read . formatTime defaultTimeLocale "%s"
-
+{-
 -- | Log the current user's visit to the stats table.
 logVisit :: MVar Stats -> Snap ByteString
 logVisit stats =
@@ -127,7 +147,7 @@ logVisit stats =
      let updateStats (Stats u) = Stats (M.insert addr now u)
      liftIO (modifyMVar_ stats (return . updateStats))
      return addr
-
+-}
 -- | Reap visitors that have been inactive for one minute.
 expireVisitors :: MVar Stats -> IO ()
 expireVisitors stats =
@@ -323,7 +343,7 @@ mueval typeOnly e =
            [e',_typ]        | T.pack e == e' -> return (Left "Evaluation killed!")
            _ ->
              return (Left (out <> if out == "" then err <> " " <> T.pack (show status)  else ""))
-
+{-
 -- | The home page.
 home :: MVar Stats -> Snap ()
 home stats =
@@ -341,6 +361,35 @@ home stats =
         css url =
           link_ [rel_ "stylesheet",type_ "text/css",href_ url]
 
+-- | The tutorial page.
+tut1 :: MVar Stats -> Snap ()
+tut1 stats =
+  do void (logVisit stats)
+     writeLazyText
+       (renderText
+          (html_ (do head_ headContent_tut1
+                     body_ bodyContent_tut1)))
+  where headContent_tut1 =
+          do title_ "HaskellMOOC! An interactive tutorial in your browser"
+             meta_ [charset_ "utf-8"]
+             css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
+             css "../static/css/tryhaskell.css"
+             css "//fonts.googleapis.com/css?family=Merriweather"
+        css url =
+          link_ [rel_ "stylesheet",type_ "text/css",href_ url]          
+
+-- | Content of the body.
+bodyContent_tut1 :: Html ()
+bodyContent_tut1 =
+  do container_
+       (row_ (span12_ (do bodyUsers
+                          bodyHeader_tut1)))
+     warningArea
+     consoleArea
+     bodyFooter_tut1
+     scripts_tut
+
+          
 -- | Content of the body.
 bodyContent :: Html ()
 bodyContent =
@@ -366,6 +415,15 @@ bodyHeader =
            (table_ (tr_ (do td_ (p_ [class_ "haskell-icon"] mempty)
                             td_ [class_ "try-haskell"] "Try Haskell"))))
 
+
+-- | The header.
+bodyHeader_tut1 :: Html ()
+bodyHeader_tut1 =
+  div_ [class_ "haskell-icon-container"]
+       (a_ [href_ "/"]
+           (table_ (tr_ (do td_ (p_ [class_ "haskell-icon"] mempty)
+                            td_ [class_ "try-haskell"] "HaskellMOOC"))))
+       
 -- | An area for warnings (e.g. cookie warning)
 warningArea :: Html ()
 warningArea =
@@ -402,6 +460,23 @@ bodyFooter =
              a_ [href_ "http://github.com/chrisdone/jquery-console"] "jquery-console"
              "."
 
+-- | The footer with links and such.
+bodyFooter_tut1 :: Html ()
+bodyFooter_tut1 =
+  footer_ (container_ (row_ (span12_ (p_ [class_ "muted credit"] links))))
+  where links =
+          do a_ [href_ "http://github.com/wimvanderbauwhede/tryhaskell"] "@HaskellMOOC variant of TryHaskell"
+             " by "
+             a_ [href_ "http://twitter.com/christopherdone"] "@christopherdone"
+             ", concept inspired by "
+             a_ [href_ "http://tryruby.org/"] "Try Ruby"
+             ", Haskell evaluator powered by Gwern Branwen's "
+             a_ [href_ "http://hackage.haskell.org/package/mueval"] "Mueval"
+             ",  and console by "
+             a_ [href_ "http://github.com/chrisdone/jquery-console"] "jquery-console"
+             "."
+             
+
 -- | Scripts; jquery, console, tryhaskell, ga, the usual.
 scripts :: Html ()
 scripts =
@@ -418,3 +493,22 @@ scripts =
               \pageTracker2._trackPageview(location.pathname + location.search + location.hash);\
               \window.ga_tracker = pageTracker2;\
               \} catch(err) {}"
+
+-- | Scripts; jquery, console, tryhaskell, ga, the usual.
+scripts_tut :: Html ()
+scripts_tut =
+  do script_ [src_ "//code.jquery.com/jquery-2.0.3.min.js"] ""
+     script_ [src_ "../static/js/jquery.console.js"] ""
+     script_ [src_ "../static/js/tryhaskell.js"] ""
+     script_ [src_ "../static/js/tryhaskell.pages.js"] ""
+     script_ "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");\
+              \document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));"
+     script_ "try {\
+              \var pageTracker2 = _gat._getTracker(\"UA-7443395-14\");\
+              \pageTracker2._setDomainName(\"none\");\
+              \pageTracker2._setAllowLinker(true);\
+              \pageTracker2._trackPageview(location.pathname + location.search + location.hash);\
+              \window.ga_tracker = pageTracker2;\
+              \} catch(err) {}"      
+
+-}              

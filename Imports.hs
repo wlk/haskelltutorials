@@ -4,7 +4,8 @@ import           Control.Applicative
 import           Control.Arrow
 import           Control.Monad
 import           Control.Monad.Cont
-import           Control.Monad.Error
+--import           Control.Monad.Error
+import           Control.Monad.Except
 import           Control.Monad.Fix
 import           Control.Monad.Identity
 import           Control.Monad.RWS
