@@ -1,9 +1,14 @@
-tryhaskell
+Haskell Tutorials
 =====
 
-Try Haskell at [tryhaskell.org](http://tryhaskell.org/)!
+Interactive tutorials for @HaskellMOOC, based on Try Haskell [tryhaskell.org](http://tryhaskell.org/)
+The main difference is that we refactored the code to make it easier to create many different tutorials each with their own url.
 
-Hacking
+The tutorial sources are in `static/js/tutorial{n}.pages.js`
+
+The info below is from the `tryhaskell` README:
+
+Local Installation
 =====
 
 Get the Git version of Mueval from here:
