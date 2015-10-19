@@ -337,18 +337,25 @@ return '<p>'+
     {
       trigger:function(result){
         // This can generate an error, we should test here against the actual expressions not the results
-        return true;
+var retval = /min\s+\d+\s+max\s+\d+\s+\d+/.test(result.expr) ||
+/min\s+max\s+\d+\s+\d+\s+\d+/.test(result.expr) ||
+/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(result.expr) ||
+/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(result.expr);
+        return retval;
       },
       guide:function(result){
-        // if (!result) result = {expr:'sqrt (9+7)',value:4.0};
-        var valid = /.*/.test(result.expr);
-        var msg = "";
-        if (valid) {
-          msg = "<p></p>"
-
-        } else  {
-          msg = "<p></p>"
-        }
+var msg="";
+                if (/min\s+\d+\s+max\s+\d+\s+\d+/.test(result.expr)) {
+msg = "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments.  You need parentheses around the inner function call, e.g. <code>min 5 (max 3 4)</code>.";
+                } else if (/min\s+max\s+\d+\s+\d+\s+\d+/.test(result.expr) ) {
+                    msg ="That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments. You need parentheses around the inner function call, e.g. <code>min (max 3 4) 5</code>.";
+                } else if (/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(result.expr)) {
+                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
+                } else if (/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(result.expr)) {
+                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
+                } else {
+                    // should not happen!
+                }
         return msg+'<p>'+
         "type <code>next</code> to continue to the next section"
         +'</p>';
@@ -359,33 +366,9 @@ return '<p>'+
     ];
 
 /*
-CHECK9: They can do min 5 max 3 4, min max 3 4 5, min 5 (max 3 4) or min (max 3 4) 5, we need to catch each case:
-
-/min\s+\d+\s+max\s+\d+\s+\d+/
-If OK
-say "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments"
-
-Else If
-/min\s+max\s+\d+\s+\d+\s+\d+/
-say "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments"
-
-Else If
-/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/
-say "That worked, well done!"
-
-Else If
-/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/
-say "That worked, well done!"
-
-Else
-
-say "What you typed was not what I expected, can't help you there."
-
-*/
-/*
 4. Equations
 4.1 Equations are used to give names to values, e.g.
-'answer = 42'
+<code>answer = 42</code>
 CHECK11: /\w+\s*=\s*\d+/
 If OK say
 "That did not work, sorry. In the interactive interpreter, you need to use the keyword 'let' to indicate that you are writing an equation. Try this: 'let answer = 42'

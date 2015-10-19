@@ -16,7 +16,11 @@ tutorial1.stdin = [];
 
 // IO expression.
 tutorial1.io = null;
+
+// WV extensions for HaskellMOOC
+//
 tutorial1.continueOnError = false;
+tutorial1.equations=[];
 
 // Files in the file system.
 tutorial1.files = {
@@ -49,7 +53,7 @@ tutorial1.preCommandHook = function(line,report){
         if (n <= pages.length) {
             tutorial1.setPage(n,null);
             report();
-            return true;
+            return [true,'True'];
         }
     }
     else if (m = line.trim().match(/^lesson([0-9]+)/)) {
@@ -59,7 +63,7 @@ tutorial1.preCommandHook = function(line,report){
             if (pages[i].lesson == n) {
                 tutorial1.setPage(i,null);
                 report();
-                return true;
+                return [true,'True'];
             }
         }
     } else if (line.trim() == 'next') {
@@ -67,19 +71,28 @@ tutorial1.preCommandHook = function(line,report){
             tutorial1.setPage(tutorial1.currentPage + 1);
         }
         report();
-        return true;
+        return [true,'True'];
     } else if (line.trim() == 'back' || line.trim() == 'prev') {
         if (tutorial1.currentPage > 1) {
             tutorial1.setPage(tutorial1.currentPage - 1);
         }
         report();
-        return true;
+        return [true,'True'];
     } else if (line.trim() == 'help' || line.trim() == 'start' ) {
         tutorial1.setPage(2,null);
         report();
-        return true;
+        return [true,'True'];
+    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=>]/.test( line.trim() ) ) {
+        alert('Got an equation: '+line.trim());
+        tutorial1.equations.push(line.trim());
+        line = 'True';
+        return [false,'True'];
+    } else {
+        // OK, an expression that is not an equation
+        alert('Full expression is now: '+ 'let {'+ tutorial1.equations.join(';') +' } in '+line.trim());
+        line = 'let {'+ tutorial1.equations.join(';') +' } in '+line.trim();
     }
-    return false;
+    return [false,line];
 };
 
 // Make the console controller.
@@ -91,9 +104,13 @@ tutorial1.makeController = function(){
             else return true;
         },
         commandHandle: function(line,report){
+//            alert(tutorial.io);
             if(tutorial1.io === null){
-                if(!tutorial1.preCommandHook(line,report)){
-                    tutorial1.ajaxCommand(line,report,[]);
+                var retval = tutorial1.preCommandHook(line,report);
+                var ignoreCommand = retval[0];
+                var newLine = retval[1];
+                if(!ignoreCommand){
+                    tutorial1.ajaxCommand(newLine,report,[]);
                 }
             } else {
                 tutorial1.stdin.push(line);
