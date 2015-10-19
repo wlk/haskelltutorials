@@ -16,6 +16,7 @@ tutorial1.stdin = [];
 
 // IO expression.
 tutorial1.io = null;
+tutorial1.continueOnError = false;
 
 // Files in the file system.
 tutorial1.files = {
@@ -119,6 +120,7 @@ tutorial1.ajaxCommand = function(line,report,stdin){
         data: args,
         success: function(result){
             if(result.stdout !== undefined){
+ //               alert(result.stdout);
                 tutorial1.files = result.files;
                 result = result.stdout;
                 tutorial1.io = line;
@@ -134,26 +136,42 @@ tutorial1.ajaxCommand = function(line,report,stdin){
                 tutorial1.controller.continuedPrompt = false;
             } else {
                 if(result.error !== undefined){
-                    result = result.error;
-                    report([{ msg: result || 'Unspecified error. Have you installed mueval?',
+// A type error goes here,
+// What I want is the option to carry on
+                    result.expr = args.exp                    
+                    if (tutorial1.continueOnError) {
+                        if(tutorial1.successHook != null) {
+                            tutorial1.successHook(result);
+                        }
+                        report([{ msg: result.error || 'Unspecified error. Have you installed mueval?',
+                              className:'jquery-console-stdout' }]);
+                    } else {
+                    report([{ msg: result.error || 'Unspecified error. Have you installed mueval?',
                               className:'jquery-console-error' }]);
+                    }
                 } else if(result.success){
+                    // So this is where we get when a computation just works
                     result = result.success;
                     var msgs = [];
                     for(var i = tutorial1.stdout.length; i < result.stdout.length; i++) {
                         msgs.push({ msg: result.stdout[i], className: 'jquery-console-stdout' });
                     }
-                    if(tutorial1.successHook != null)
+                    if(tutorial1.successHook != null) {
                         tutorial1.successHook(result);
+                    }
                     if(result.type !== 'IO ()' && !result.value.match(/^</))
                         msgs.push({ msg: result.value, className: 'jquery-console-value' });
                     msgs.push({ msg: ':: ' + result.type, className: 'jquery-console-type' });
                     report(msgs);
                     tutorial1.files = result.files;
                 }
-                tutorial1.io = null;
-                tutorial1.stdout = [];
-                tutorial1.stdin = [];
+                if (tutorial1.continueOnError) {
+ // nothing                        
+                } else {
+                    tutorial1.io = null;
+                    tutorial1.stdout = [];
+                    tutorial1.stdin = [];
+                }
             }
             if(typeof(Storage)!=="undefined")
             {
