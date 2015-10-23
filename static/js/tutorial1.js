@@ -7,6 +7,7 @@ tutorial1.successHook = null;
 
 // The current page number.
 tutorial1.currentPage = null;
+tutorial1.nPages = null;
 
 // Stdout state from the current IO evaluation.
 tutorial1.stdout = [];
@@ -18,9 +19,35 @@ tutorial1.stdin = [];
 tutorial1.io = null;
 
 // WV extensions for HaskellMOOC
-//
+// Allow continue on error
 tutorial1.continueOnError = false;
+// Handle context for equations
 tutorial1.equations=[];
+tutorial1.isEq = false;
+tutorial1.forget = function(varname) {
+//	alert('FORGET');
+	var remaining_eqs = [];
+         for (var i = 0; i <  tutorial1.equations.length; i++) {
+             var eq = tutorial1.equations[i];
+             var chunks = eq.split(/\s*=\s*/);
+             var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
+//             alert('<'+lhs+'><'+varname+'>');
+             varre = new RegExp('\\b'+varname+'\\b');
+             if (!varre.test(lhs)) {
+//            	 alert('Pushing '+eq);
+            	 remaining_eqs.push(tutorial1.equations[i]);
+             }
+         }
+         tutorial1.equations=remaining_eqs;
+//         alert(varname+" => "+tutorial1.equations);
+}
+
+tutorial1.undo  = function() {
+    if (tutorial1.isEq) {
+     tutorial1.equations.pop();
+    }
+}
+
 
 // Files in the file system.
 tutorial1.files = {
@@ -47,6 +74,8 @@ tutorial1.showWarnings = function() {
 // it returns true.
 tutorial1.preCommandHook = function(line,report){
     var m, pages = tutorial1.pages.list;
+    tutorial1.nPages = pages.length;
+    tutorial1.isEq = false;
     // if the line matches step{$n} then get page $n from  tutorial1.pages.list (i.e. pages)
     if (m = line.trim().match(/^step([0-9]+)/)) {
         var n = m[1] * 1;
@@ -82,14 +111,44 @@ tutorial1.preCommandHook = function(line,report){
         tutorial1.setPage(2,null);
         report();
         return [true,'True'];
-    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=>]/.test( line.trim() ) ) {
-        alert('Got an equation: '+line.trim());
-        tutorial1.equations.push(line.trim());
-        line = 'True';
-        return [false,'True'];
+    } else if (/^undo/.test(line.trim()) ) {
+        tutorial1.undo();
+        report();        
+        return [true,'True'];
+    } else if (/^forget/.test(line.trim()) ) {
+        var chunks = line.trim().split(/\s+/);
+        var varname = chunks[1];
+        tutorial1.forget(varname);
+        report();
+        return [true,'True'];
+    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
+        var nline = line.trim();
+        tutorial1.isEq = true;
+        tutorial1.equations.push(nline);
+        var context = '';
+        if (tutorial1.equations.length>0) {
+        	context = 'let {'+ tutorial1.equations.join(';') +' } in ';
+        }
+         var chunks = nline.split(/\s+=\s+/);
+         var lhs = chunks[0];
+         var rhs=chunks[1];
+         //lhs.replace(/\W+/g,'');
+         //rhs.replace(/\W+/g,'');
+//         alert('PRE:<'+lhs+'><'+rhs+'>');
+         // This is a naive check for recursion, we ignore the context
+         
+         var re = new RegExp('\\b'+lhs+'\\b');
+         if (re.test(rhs)) {
+//        	 alert('Recursion!');
+             tutorial1.equations.pop();
+             tutorial1.isEq = false;
+             line = 'let '+nline+' in '+lhs;
+         } else {
+             line = context + lhs;
+         }
+        return [false,line];
     } else {
         // OK, an expression that is not an equation
-        alert('Full expression is now: '+ 'let {'+ tutorial1.equations.join(';') +' } in '+line.trim());
         line = 'let {'+ tutorial1.equations.join(';') +' } in '+line.trim();
     }
     return [false,line];
@@ -214,7 +273,8 @@ tutorial1.setPage = function(n,result){
     if(page){
         // Update the current page content
         var guide = $('#guide');
-        guide.html(typeof page.guide == 'string'? page.guide : page.guide(result));
+        var stepcounter = (tutorial1.currentPage != null) ? '<div style="color: grey; text-align:right">[step '+(tutorial1.currentPage+1)+'/'+tutorial1.nPages+']</div>' : '';
+        guide.html(stepcounter+(typeof page.guide == 'string'? page.guide : page.guide(result)));
         tutorial1.makeGuidSamplesClickable();
         // Update the location anchor
         if (tutorial1.currentPage != null)
@@ -222,6 +282,7 @@ tutorial1.setPage = function(n,result){
         tutorial1.currentPage = n;
         // Setup a hook for the next page
         var nextPage = tutorial1.pages.list[n];
+        
         if(nextPage) {
             tutorial1.successHook = function(result){
                 if (nextPage.trigger &&

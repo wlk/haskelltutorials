@@ -26,7 +26,7 @@ tut tut_no stats =
           (html_ (do head_ headContent_tut
                      body_ (bodyContent_tut tut_no))))
   where headContent_tut =
-          do title_ "HaskellMOOC! An interactive tutorial in your browser"
+          do title_ "Haskell Tutorials -- Interactive tutorials in your browser"
              meta_ [charset_ "utf-8"]
              css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
              css  (T.pack ("/static/css/tutorial"++(show tut_no)++".css"))
@@ -51,7 +51,7 @@ bodyHeader_tut tut_no =
   div_ [class_ "haskell-icon-container"]
        (a_ [href_ (T.pack ("/tutorial"++(show tut_no)))]
            (table_ (tr_ (do td_ (p_ [class_ "haskell-icon"] mempty)
-                            td_ [class_ "try-haskell"] "HaskellMOOC"))))
+                            td_ [class_ "try-haskell"] "Haskell Tutorials"))))
 
 -- | The footer with links and such.
 bodyFooter_tut :: Html ()
@@ -77,6 +77,7 @@ scripts_tut tut_no =
         tut_pages_js_str = T.pack $ "/static/js/tutorial"++(show tut_no)++".pages.js"
         tut_js_str = T.pack $  "/static/js/tutorial"++(show tut_no)++".js"
      script_ [src_ "//code.jquery.com/jquery-2.0.3.min.js"] ""
+     -- script_ [src_ "/static/js/jquery-2.0.3.js"] ""
      script_ [src_ "/static/js/jquery.console.js"] ""
      script_ [src_ tut_js_str] ""
      script_ [src_ tut_pages_js_str ] ""
