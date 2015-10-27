@@ -9,3 +9,15 @@ tags
 *.tag
 cabal.sandbox.config
 .cabal-sandbox
+
+*.log
+
+static/js/.settings/.jsdtscope
+
+static/js/.settings/org.eclipse.wst.jsdt.ui.superType.container
+
+static/js/.settings/org.eclipse.wst.jsdt.ui.superType.name
+
+static/js/.project
+
+job
