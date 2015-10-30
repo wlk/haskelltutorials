@@ -138,7 +138,7 @@ users statsv =
      writeLBS (encode (map (show . hash *** epoch)
                            (M.toList (statsUsers stats))))
   where epoch :: UTCTime -> Integer
-        epoch = read . formatTime defaultTimeLocale "%s"
+        epoch = read . formatTime Data.Time.defaultTimeLocale "%s"
 {-
 -- | Log the current user's visit to the stats table.
 logVisit :: MVar Stats -> Snap ByteString
