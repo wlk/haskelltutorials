@@ -22,7 +22,8 @@ tutorial1.pages.htmlEncode = function(text,shy){
 tutorial1.pages.isNum = function(result) {
   var retval =
     /(Num|Fractional|Integral|Floating)\s+[a-z]+\s+=>\s+[a-z]+/.test( result.type ) ||
-    /\(Ord\s+[a-z]\s*,\s*(Num|Fractional|Integral|Floating)\s+[a-z]+\)\s+=>\s+[a-z]+/.test( result.type ) ||
+    /\(Ord\s+[a-z]+\s*,\s*(Num|Fractional|Integral|Floating)\s+[a-z]+\)\s+=>\s+[a-z]+/.test( result.type ) ||
+    /\((Num|Fractional|Integral|Floating)\s+[a-z]+\s*,\s*Ord\s+[a-z]+\)\s+=>\s+[a-z]+/.test( result.type ) ||
     result.type == "Integer" ||
     result.type == "Int" ||
     result.type == "Bool";
