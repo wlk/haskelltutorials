@@ -66,7 +66,7 @@ import           TryHaskell.BuildPage
 import           TryHaskell.Tutorials
 
 tutorials :: MVar Stats -> [(ByteString, Snap ())]
-tutorials stats = map (\tut_no ->(pack ("/tutorial"++(show tut_no)),tut tut_no stats)) [1] -- [1 .. 12]
+tutorials stats = map (\tut_no ->(pack ("/tutorial"++(show tut_no)),tut tut_no stats)) [1..2] -- [1 .. 12]
 
 data EvalResult
   = ErrorResult !Text
