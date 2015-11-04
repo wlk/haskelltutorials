@@ -1,3 +1,4 @@
+
 // Module for the guide pages
 tutorial1.pages = {};
 
@@ -38,7 +39,7 @@ tutorial1.pages.list =
        '<div class="indent">' +
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="http://127.0.0.1:4001/tutorial1">http://127.0.0.1:4001/tutorial1</a>.</p>'+
+       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial1.url+'">'+tutorial1.url+'</a>.</p>'+
        '<br>'+
        '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
        '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +

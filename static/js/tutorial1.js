@@ -1,6 +1,9 @@
 // WV: actually, this is entirely generic
 // Main tutorial1 module.
 tutorial1 = {};
+tutorial1.url=window.location.href;
+tutorial1.hostname = '127.0.0.1';
+tutorial1.port = '4001';
 
 // A success hook which can be bound and rebound or set as null.
 tutorial1.successHook = null;
