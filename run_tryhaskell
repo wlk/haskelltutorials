@@ -1,2 +1,8 @@
-cp -r  static  ./.cabal-sandbox/share/x86_64-osx-ghc-7.8.3/tryhaskell-0.0/
-env PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell
+if [[ `uname` == 'Darwin' ]]; then
+   TRY_HASKELL_PATH=./.cabal-sandbox/share/x86_64-osx-ghc-7.8.3/tryhaskell-0.0/
+elif [[ `uname` == 'Linux' ]]; then
+   TRY_HASKELL_PATH=./.cabal-sandbox/share/x86_64-linux-ghc-7.10.2.20150906/tryhaskell-0.0/
+fi
+
+cp -r  static  $TRY_HASKELL_PATH
+env MUEVAL_TIMEOUT=10 PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell
