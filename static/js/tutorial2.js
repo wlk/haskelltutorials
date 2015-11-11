@@ -140,7 +140,8 @@ tutorial2.preCommandHook = function(line,report){
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
          if (/\\/.test(rhs)) {
-        	 isLambda = true;        	 
+        	 isLambda = true;      
+        	 alert("LAMBDA:"+rhs)
          }
          //lhs.replace(/\W+/g,'');
          //rhs.replace(/\W+/g,'');
