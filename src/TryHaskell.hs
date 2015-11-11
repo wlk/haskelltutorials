@@ -50,6 +50,7 @@ import qualified Data.Text as S
 import           Data.Text.Encoding (decodeUtf8)
 import           Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as T
+-- import           Data.Time.Format.Locale
 import           Data.Time
 import           Prelude hiding (div,head)
 import           PureIO (Interrupt(..),Output(..),Input(..),IOException(..))
@@ -66,7 +67,7 @@ import           TryHaskell.BuildPage
 import           TryHaskell.Tutorials
 
 tutorials :: MVar Stats -> [(ByteString, Snap ())]
-tutorials stats = map (\tut_no ->(pack ("/tutorial"++(show tut_no)),tut tut_no stats)) [1] -- [1 .. 12]
+tutorials stats = map (\tut_no ->(pack ("/tutorial"++(show tut_no)),tut tut_no stats)) [1,2] -- [1 .. 12]
 
 data EvalResult
   = ErrorResult !Text
@@ -138,7 +139,7 @@ users statsv =
      writeLBS (encode (map (show . hash *** epoch)
                            (M.toList (statsUsers stats))))
   where epoch :: UTCTime -> Integer
-        epoch = read . formatTime Data.Time.defaultTimeLocale "%s"
+        epoch = read . formatTime defaultTimeLocale "%s"
 {-
 -- | Log the current user's visit to the stats table.
 logVisit :: MVar Stats -> Snap ByteString
