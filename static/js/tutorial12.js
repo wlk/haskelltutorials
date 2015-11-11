@@ -124,6 +124,10 @@ tutorial12.preCommandHook = function(line,report){
         tutorial12.forget(varname);
         report();
         return [true,'True'];
+    }  else if (/^\\/.test( line.trim() ) ) {
+    	var nline = line.trim();
+    	var exprs = nline.split(/\s*\-\>\s*/);
+    	line = exprs[1];
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
     	
     	// This is an equation.     	
@@ -143,7 +147,7 @@ tutorial12.preCommandHook = function(line,report){
          var isLambda = false;
          if (/^\\/.test(rhs)) {
         	 isLambda = true;      
-        	 alert("LAMBDA:"+rhs);
+//        	 alert("LAMBDA:"+rhs);
          }
          //lhs.replace(/\W+/g,'');
          //rhs.replace(/\W+/g,'');
@@ -160,8 +164,9 @@ tutorial12.preCommandHook = function(line,report){
         	 if (!isLambda) {
              line = context + lhs;
         	 } else {
-        		 
-        		 line = context + '()';
+        		 var exprs = rhs.split(/\s*\-\>\s*/);
+        		 var expr = exprs[1];
+        		 line = context + expr;
 //        		 alert(line);
         	 }
          }
