@@ -1,26 +1,26 @@
 
 // Module for the guide pages
-tutorial2.pages = {};
+tutorial11.pages = {};
 
 // Unshow a string
-tutorial2.pages.unString = function(str){
+tutorial11.pages.unString = function(str){
     return str.replace(/^"(.*)"$/,"$1").replace(/\\"/,'"');
 }
 
 // Random message from a list of messages
-tutorial2.pages.rmsg = function(choices) {
+tutorial11.pages.rmsg = function(choices) {
     return choices[Math.floor((Math.random()*100) % choices.length)];
 }
 
 // Simple HTML encoding
-tutorial2.pages.htmlEncode = function(text,shy){
+tutorial11.pages.htmlEncode = function(text,shy){
     var x = $('<div></div>');
     x.text(text);
     return x.html();
 }
 
 // Added by WV
-tutorial2.pages.isNum = function(result) {
+tutorial11.pages.isNum = function(result) {
   var retval =
     /(Num|Fractional|Integral|Floating)\s+[a-z]+\s+=>\s+[a-z]+/.test( result.type ) ||
     /\(Ord\s+[a-z]+\s*,\s*(Num|Fractional|Integral|Floating)\s+[a-z]+\)\s+=>\s+[a-z]+/.test( result.type ) ||
@@ -31,30 +31,15 @@ tutorial2.pages.isNum = function(result) {
     return retval;
 }
 
-<<<<<<< HEAD
-=======
-tutorial2.pages.isBool = function(result) {
-    return (result.type == "Bool");
-}
-
-
-    
-
-
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
 // All pages
-tutorial2.pages.list =
+tutorial11.pages.list =
     [
       {title:'Haskell Interactive Tutorials',
        guide:
-<<<<<<< HEAD
-       
-=======
        '<div class="indent">' +
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial2.url+'">'+tutorial2.url+'</a>.</p>'+
+       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial11.url+'">'+tutorial11.url+'</a>.</p>'+
        '<br>'+
        '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
        '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
@@ -65,151 +50,75 @@ tutorial2.pages.list =
        '<code title="Click me to insert &quot;23 * 36&quot; into the console." style="cursor: pointer;">23 * 36</code> or <code title="Click me to insert &quot;reverse ' +
        '&quot;hello&quot;&quot; into the console." style="cursor: pointer;">reverse ' +
        '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
-<<<<<<< HEAD
-       '</p>'        
-      },
-        {title:'Tutorial 2: Functions and Lists',
-         guide:
-//         '<div class="indent">' +
-         '<h3>Tutorial 2: The Essentials: Functions and Lists</h3>' +
-         '<p>This tutorial will guide you through two essential concepts of the Haskell language: functions and lists. \
-         You will learn the syntax, how to create and use functions and lists.</p>'+
-         '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
-         '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
-         '<p>This tutorial has XX sections:</p>'+
-         '<ol>'+
-         '<li>Defining a Function (<code>step3</code>)</li>'+
-         '<li>Functions without a Name: Lambda Functions(<code>step5</code>)</li>'+
-         '<li>Lists (<code>step12</code>)</li>'+
-         '<li>XX (<code>step19</code>)</li>'+
-         '</ol>'
-//         +'</div>'
-=======
        '</p>' +
 
        '</div>'
       },
-        {title:'Tutorial 2: Booleans and Lists',
+        {title:'Tutorial 1: Expressions',
          guide:
          '<div class="indent">' +
-         '<h3>Tutorial 2: Booleans and Lists</h3>' +
-         '<p>Let\'s get some more experience with Boolean values and expressions.</p>'+
+         '<h3>Tutorial 1: The Basics: Expressions, Functions and Equations</h3>' +
+         '<p>This tutorial will guide you through the basic concepts of the Haskell language: expressions, functions and equations. You will learn the syntax, how to create expressions, how to use functions in expressions and how to give your expressions names using equations.</p>'+
+         '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
+         '<p>This tutorial has four sections:</p>'+
+         '<ol>'+
+         '<li>Integer Expressions (<code>step3</code>)</li>'+
+         '<li>Syntax of Expressions (<code>step5</code>)</li>'+
+         '<li>Functions (<code>step12</code>)</li>'+
+         '<li>Equations (<code>step19</code>)</li>'+
+         '</ol>'+
          '</div>'
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
 
         // Simple integer arithmetic
         {lesson:1,
-<<<<<<< HEAD
-         title:'Defining a function',
+         title:'Integer Expressions',
          guide:
-         '<h3>Defining a function</h3>'+
-        	 '<p>In Haskell, many functions are pre-defined in a standard library called the Prelude.'+
-        	 'We have already encountered some of them in the previous tutorial, e.g. <tt>abs</tt>, <tt>max</tt> and <tt>min</tt>.</p>.'+
-
-        	 '<p>But the essence of functional programming is defining your own functions to solve your problems!</p>'+
-
-        	 '<p>A function is defined by an equation. There are two ways to define a function. You can either define a named function, e.g.'+
-
-        	 	'<code>f x = x+1</code></p>'+
-
-        	 	'<p>The left hand side (lhs) of the equation looks like a variable – and that’s what it is! '+
-        	 	'The right hand side (rhs) is an expression that uses the local variable and defines the result of the expression.</p>'+
-        	 	"<p>If you enter the equation above or a similar one, you'll see it does indeed return an expression.</p>"
+         '<h3>Integer Expressions</h3>'
+         + "<p>We start with some simple integer arithmetic. "
+         +"At the prompt on the left there you can type in Haskell expressions.</p>"
+         +"<p>Type an integer number, e.g. <code>42</code>,  and observe that it evaluates to itself.</p>"
         },
         {
-          trigger:function(result){
-              return /Expr/.test(result.type);
-          }, 
+          trigger:tutorial11.pages.isNum, 
           guide:function(result){
-        	 	return '<p>To use the function, you apply it to an argument, e.g.'+
-
-        	 	'<code>f 3</code>.</p>'
-
-                    }
-        },        	 
-        
-        {
-            trigger:tutorial2.pages.isNum,
-            guide:function(result){
-          	 	return         	 '<p>You can of also define functions with multiple arguments, e.g.'+
-
-        	 	'<code>add3nums x y z = x + y + z</code>.</p>'
-            }
-        },   
-        {
-        trigger:function(result){
-            return /Expr/.test(result.type);
-        }, 
-        guide:function(result){
-      	 	return '<p>To use it, e.g. <code>10 + 4* add3nums 1 2 3</code>.</p>'   
-        }
-      },      
-
-        // Lambda Functions
-
-        {lesson:2,
-         title:'Lambda Functions',
-         trigger:tutorial2.pages.isNum,
-          guide:function(result){
-        	  return
-            "<h3>Functions without a Name: Lambda Functions</h3>"
-        	  '<p>You can also define a function without a name, known as a "lambda function" (or "anonymous function" in other languages),'+
-        	  'for example <code>\\x -> x+1</code>.</p>'+
-
-        	  '<p>On the lhs of the arrow you list the arguments, on the rhs the expression.</p>'+
-        	  '<p>If you entered this expression in the terminal you got an error, but this is because the interpreter does not know how to print the lambda function.</p>'+
-        	  '<p>You can use this function straightaway, for example:'+
-        	  
-        		'<code>(\\x -> x+1 ) 4</code>.</p>'
-        }
-        },
-        
-        // Lambda Functions - cont'd
-        {
-          trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            return "<p>Or you can use an equation to assign the lambda function to a variable: "+
-
-	"<code>fl = \\x -> x+1</code>.</p>";
-=======
-         title:'Boolean Expressions',
-         guide:
-         '<h3>Boolean Expressions</h3>'
-         + "<p>Like many other languages, the double-equals operator is used for testing value equality. "
-         +"<p>Type an integer equality test, e.g. <code>5==5</code>,  and observe that it evaluates to True.</p>"
-        },
-        {
-          trigger:tutorial2.pages.isBool, 
-          guide:function(result){
-            if (!result) result = {expr:'True',value:'True'};
+            if (!result) result = {expr:'42',value:42};
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var complied = /True/.test(result.value);            
-            var valid = /True|False/.test(result.value);
-            var next_step = "<p>Now use the /= operator to test for non-equality, e.g. <code>1 /= 2</code>, and observe that it evaluates to the expected result.</p>";
+            var complied = /\d+/.test(rexpr);            
+            var valid = /^[0-9\.\+\-\*\(\)]+\s*$/.test(rexpr);
+            var hasdiv = /\//.test(result.expr);
+            var who = complied? 'we' : 'you';
+            var next_step = "<p>Now type a simple integer arithmetic operation, e.g. <code>6*7</code>, and observe that it evaluates to the expected result.</p>";
             if (valid) {
               if (complied) {
-                return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
+                return "<p>OK, no surprises so far, you got back the number "+result.value+" as expected.</p>"+next_step;
               } else {
-                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as expected.</p>"+next_step;
+                return "<p>OK, you typed something more complicated but it worked, you got back the number "+result.value+" as expected.</p>"+next_step;
               }
             } else {
-                return '<p>'+
-                    "What you typed does not seem to be a simple integer arithmetic expression, but it looks like it worked all right!"
-                    +'</p>'+next_step;
-		
+//                If they used a division
+                if (hasdiv) {
+                	return '<p>'+
+                	"When you use the '/' sign for division, Haskell will treat the numbers as real rather than integer."+next_step;
+                	+'</p>';
+                } else {
+                	return '<p>'+
+                	"What you typed does not seem to be a simple integer arithmetic expression, but it looks like it worked all right!"
+                	+'</p>'+next_step;
+
             }
-          }
+            }
+        }
 
         },
         // Expression Syntax
 
         {lesson:2,
          title:'Syntax of Expressions',
-         trigger:tutorial2.pages.isNum,
+         trigger:tutorial11.pages.isNum,
           guide:function(result){
             if (!result) result = {expr:'6*7',value:42};
             var next_step =
@@ -223,17 +132,16 @@ tutorial2.pages.list =
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial11.pages.isNum,
           guide:function(result){
             return "<p>You can let Haskell prove this for you: try <code>3+(4*6) == 3+4*6</code>.</p>";
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
           }
         },        
         
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial11.pages.isNum,
           guide:function(result){
             if (!result) result = {expr:'3+(4*6) == 3+4*6',value:'True'};
             var complied = /Bool/.test(result.type);            
@@ -251,10 +159,10 @@ tutorial2.pages.list =
         },
 
         // Expression Syntax - Corner cases 1
-        {trigger:tutorial2.pages.isNum,
+        {trigger:tutorial11.pages.isNum,
           guide:function(result){
             if (!result) result = {expr:'((6))*(((7)))',value:42};
-            tutorial2.continueOnError = true;
+            tutorial11.continueOnError = true;
             var next_step =
             "<h3>Special Cases</h3><p>There are some special cases, in particular regarding the '-' sign. For example, try <code>4+-3</code>.";
             return next_step;
@@ -267,7 +175,7 @@ tutorial2.pages.list =
               return /^\s+Not\s+in\s+scope:\s+.[\+\-\*\/][\+\-\*\/]./.test(result.error);
           },
           guide:function(result){
-          tutorial2.continueOnError = true;
+          tutorial11.continueOnError = true;
           var matches = result.error.match(/^\s+Not\s+in\s+scope:\s+.([\+\-\*\/][\+\-\*\/])./);
           return   "<p>As you can see, this fails:  Haskell thinks you wanted to use a special operation '"+matches[1]+"'.</p>"
             +"<p>Now, try <code>4+ -3</code> (that's right, just an extra space).</p>";
@@ -281,7 +189,7 @@ tutorial2.pages.list =
               return /^\s+Precedence\s+parsing\s+error/.test(result.error);
           },
           guide:function(result){
-          tutorial2.continueOnError = true;
+          tutorial11.continueOnError = true;
           return  "<p>Again, that did not work as expected: Haskell does not allow you to combine 'infix' operations (like 3+4) with 'prefix' operations (like '-4').</p>"+
           "<p>So what should we do? Enclose the infix operation in parentheses: <code>4+(-3)</code></p>";
         }
@@ -289,9 +197,9 @@ tutorial2.pages.list =
 
         // Expression Syntax - Corner case 4
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial11.pages.isNum,
           guide:function(result){
-          tutorial2.continueOnError = false;
+          tutorial11.continueOnError = false;
           var valid = /[0-9]+\+\-[0-9]+/.test(result.expr);
           var next_step = "<p>And yes, that one worked! So in general it is best to enclose negative numbers with parentheses in expressions. Type <code>next</code> for the next lesson.</p>";
               return next_step;
@@ -322,7 +230,7 @@ tutorial2.pages.list =
         {
           // We carry on if they typed a function and it evaluated to something numerical
           trigger:function(result){
-                     var retval = tutorial2.pages.isNum(result);
+                     var retval = tutorial11.pages.isNum(result);
                      var retexpr = /^\s*\w+\s+/.test(result.expr);
                      return retval && retexpr;
                 },
@@ -345,7 +253,7 @@ tutorial2.pages.list =
         // Functions (3)
         {
           trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
+            var retval = tutorial11.pages.isNum(result);
             var retexpr = /^\s*\w+\s+/.test(result.expr);
             return retval && retexpr;
           },
@@ -367,7 +275,7 @@ tutorial2.pages.list =
         // Functions (4)
         {
           trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
+            var retval = tutorial11.pages.isNum(result);
             var retexpr = /^\s*\w+\s+/.test(result.expr);
             return retval && retexpr;
           },
@@ -390,7 +298,7 @@ tutorial2.pages.list =
         // Functions (5)
         {
           trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
+            var retval = tutorial11.pages.isNum(result);
             var retexpr = /^\s*\w+\s+/.test(result.expr);
             return retval && retexpr;
           },
@@ -413,7 +321,7 @@ tutorial2.pages.list =
       // Functions (6)
       {
         trigger:function(result){
-          var retval = tutorial2.pages.isNum(result);
+          var retval = tutorial11.pages.isNum(result);
           var retexpr = /^\s*\w+\s+/.test(result.expr);
           return retval && retexpr;
         },
@@ -428,7 +336,7 @@ tutorial2.pages.list =
           } else  {
             msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
           }
-          tutorial2.continueOnError=true;
+          tutorial11.continueOnError=true;
           return msg+'<p>'+
           "So what about combining two functions? Try for example to apply 'min' to 'max 3 4' and '5'."
           +'</p>';
@@ -518,16 +426,16 @@ return msg;
   },
   guide:function(result){
     var msg="But you can't say <code>answer = answer * 2</code>!";
-    tutorial2.continueOnError=true;
+    tutorial11.continueOnError=true;
     return msg;
   }
 },
 {
   trigger:function(result){
     if(result.error && /Evaluation killed/.test(result.error)) {
-        // remove the last element from tutorial2.equations!
-        var drop = tutorial2.equations.pop();
-//        alert(tutorial2.equations);
+        // remove the last element from tutorial11.equations!
+        var drop = tutorial11.equations.pop();
+//        alert(tutorial11.equations);
 //        alert(drop);
     }
     return true;
@@ -537,16 +445,16 @@ return msg;
     <p>In a pure functional language like Haskell, you can't define a name in terms of itself.</p>\
     <p>And furthermore, you can only assign a name once!</p>\
     <p>For example, try <code>answer = 43</code>.</p>";
-    tutorial2.continueOnError=true;
+    tutorial11.continueOnError=true;
     return msg;
   }
 },
 {
   trigger:function(result){
     if(result.error && /Conflicting/.test(result.error)) {
-        // remove the last element from tutorial2.equations!
-        var drop = tutorial2.equations.pop();
-//        alert(tutorial2.equations);
+        // remove the last element from tutorial11.equations!
+        var drop = tutorial11.equations.pop();
+//        alert(tutorial11.equations);
 //        alert(drop);
     }
     return true;
