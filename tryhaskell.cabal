@@ -17,6 +17,7 @@ data-files:          Imports.hs
                      static/css/fonts/Haskell.ttf
                      static/css/fonts/Haskell.woff
                      static/css/tryhaskell.css
+                     static/css/tutorial.css
                      static/css/tutorial1.css
                      static/css/tutorial2.css
                      static/js/jquery.console.js

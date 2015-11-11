@@ -29,7 +29,8 @@ tut tut_no stats =
           do title_ "Haskell Tutorials -- Interactive tutorials in your browser"
              meta_ [charset_ "utf-8"]
              css "//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css"
-             css  (T.pack ("/static/css/tutorial"++(show tut_no)++".css"))
+             -- css  (T.pack ("/static/css/tutorial"++(show tut_no)++".css"))
+             css  (T.pack ("/static/css/tutorial.css"))
              css "//fonts.googleapis.com/css?family=Merriweather"
         css url =
           link_ [rel_ "stylesheet",type_ "text/css",href_ url]          

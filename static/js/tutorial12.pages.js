@@ -39,7 +39,8 @@ tutorial12.pages.list =
        
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial12.url+'">'+tutorial12.url+'</a>.</p>'+
+       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url,'+
+       'e.g. for Tutorial 1.2 it is <a href="'+tutorial12.url+'">'+tutorial12.url+'</a>.</p>'+
        '<br>'+
        '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
        '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
@@ -52,10 +53,10 @@ tutorial12.pages.list =
        '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
        '</p>'        
       },
-        {title:'Tutorial 2: Functions and Lists',
+        {title:'Tutorial 1.2: Functions and Lists',
          guide:
 //         '<div class="indent">' +
-         '<h3>Tutorial 2: The Essentials: Functions and Lists</h3>' +
+         '<h3>Tutorial 1.2: The Essentials: Functions and Lists</h3>' +
          '<p>This tutorial will guide you through two essential concepts of the Haskell language: functions and lists. \
          You will learn the syntax, how to create and use functions and lists.</p>'+
          '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
@@ -78,7 +79,7 @@ tutorial12.pages.list =
          guide:
          '<h3>Defining a function</h3>'+
         	 '<p>In Haskell, many functions are pre-defined in a standard library called the Prelude.'+
-        	 'We have already encountered some of them in the previous tutorial, e.g. <tt>abs</tt>, <tt>max</tt> and <tt>min</tt>.</p>.'+
+        	 'We have already encountered some of them in the previous tutorial, e.g. <tt>abs</tt>, <tt>max</tt> and <tt>min</tt>.</p>'+
 
         	 '<p>But the essence of functional programming is defining your own functions to solve your problems!</p>'+
 
@@ -107,7 +108,7 @@ tutorial12.pages.list =
             guide:function(result){
           	 	return         	 '<p>You can of also define functions with multiple arguments, e.g.'+
 
-        	 	'<code>add3nums x y z = x + y + z</code>.</p>'
+        	 	'<code>add3nums x y z = x + y + z</code>.</p>';
             }
         },   
         {
@@ -115,7 +116,7 @@ tutorial12.pages.list =
             return /Expr/.test(result.type);
         }, 
         guide:function(result){
-      	 	return '<p>To use it, e.g. <code>10 + 4* add3nums 1 2 3</code>.</p>'   
+      	 	return '<p>To use it, e.g. <code>10 + 4* add3nums 1 2 3</code>.</p>'   ;
         }
       },      
 
@@ -125,16 +126,13 @@ tutorial12.pages.list =
          title:'Lambda Functions',
          trigger:tutorial12.pages.isNum,
           guide:function(result){
-        	  return
-            "<h3>Functions without a Name: Lambda Functions</h3>"
-        	  '<p>You can also define a function without a name, known as a "lambda function" (or "anonymous function" in other languages),'+
-        	  'for example <code>\\x -> x+1</code>.</p>'+
-
-        	  '<p>On the lhs of the arrow you list the arguments, on the rhs the expression.</p>'+
-        	  '<p>If you entered this expression in the terminal you got an error, but this is because the interpreter does not know how to print the lambda function.</p>'+
-        	  '<p>You can use this function straightaway, for example:'+
-        	  
-        		'<code>(\\x -> x+1 ) 4</code>.</p>'
+        	  return '<h3>Functions without a Name: Lambda Functions</h3>'+
+        	'<p>You can also define a function without a name, known as a "lambda function" (or "anonymous function" in other languages),'+
+        	'for example <code>\\x -> x+1</code>.</p>'+
+        	'<p>On the lhs of the arrow you list the arguments, on the rhs the expression.</p>'+
+        	
+        	'<p>You can use this function straightaway, for example:'+        	  
+        	'<code>(\\x -> x+1 ) 4</code>.</p>';
         }
         },
         
