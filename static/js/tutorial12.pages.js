@@ -56,10 +56,11 @@ tutorial12.pages.list =
         {title:'Tutorial 1.2: Functions and Lists',
          guide:
 //         '<div class="indent">' +
+        	 // <span data-step="step3" class="code">HERE</span> 
          '<h3>Tutorial 1.2: The Essentials: Functions and Lists</h3>' +
          '<p>This tutorial will guide you through two essential concepts of the Haskell language: functions and lists. \
          You will learn the syntax, how to create and use functions and lists.</p>'+
-         '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
+         '<p>Type <code>step3</code> at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
          '<p>This tutorial has XX sections:</p>'+
          '<ol>'+
@@ -149,44 +150,41 @@ tutorial12.pages.list =
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial12.pages.isNum,
+          trigger:function(result){
+              return /Expr/.test(result.type);
+          }, 
           guide:function(result){
-            if (!result) result = {expr:'3+(4*6) == 3+4*6',value:'True'};
-            var complied = /Bool/.test(result.type);            
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /^[0-9\.\+\-\*\(\)]+\s*==\s*[0-9\.\+\-\*\(\)]+\s*$/.test(rexpr);
-            
-            var msg="";
-            if (valid) {
-                msg="<p>So this expression returned "+result.value+" and it illustrates the use of the equality test operator.</p>";
-            } 
-            var next_step =
-            "<p>You can nest as many parentheses as you like (even if it looks silly): <code>((6))*(((7)))</code></p>";
-            return msg+next_step;
+        	  return "<p>In that way you can use it later: <code>fl 4</code>.</p>"+
+        	  "<p>You can of course also define lambda functions with multiple arguments, e.g. "+
+        	  "<code>add3numsl = \\x y z -> x + y + z</code>"+
+        	  "<p>You can use this function in exactly the same way as a named function, e.g. <code>10 + 4* add3numsl 1 2 3</code>.</p>";   
           }
         },
 
         // Expression Syntax - Corner cases 1
-        {trigger:tutorial12.pages.isNum,
+        {lesson:3,
+        	title:'Lists',
+        	trigger:tutorial12.pages.isNum,
           guide:function(result){
-            if (!result) result = {expr:'((6))*(((7)))',value:42};
-            tutorial12.continueOnError = true;
-            var next_step =
-            "<h3>Special Cases</h3><p>There are some special cases, in particular regarding the '-' sign. For example, try <code>4+-3</code>.";
-            return next_step;
+        	  return "<h3>Lists</h3>"+
+        	  "<p>A list is a single value that contains several other values. The elements are written in square parentheses, separated by commas, e.g."+
+        	  '<code>[2.718, 50.0, -1.0]</code> or <code>[1,2,4,8]</code> or <code>["A","list","of","strings"]</code>.</p>';
         }
         },
 
         // Expression Syntax - Corner cases 2
         {
           trigger:function(result){
-              return /^\s+Not\s+in\s+scope:\s+.[\+\-\*\/][\+\-\*\/]./.test(result.error);
+              return /\[\w+\]/.test(result.type);
           },
           guide:function(result){
-          tutorial12.continueOnError = true;
-          var matches = result.error.match(/^\s+Not\s+in\s+scope:\s+.([\+\-\*\/][\+\-\*\/])./);
-          return   "<p>As you can see, this fails:  Haskell thinks you wanted to use a special operation '"+matches[1]+"'.</p>"
-            +"<p>Now, try <code>4+ -3</code> (that's right, just an extra space).</p>";
+        	  return "<h3>Function returning several results</h3>"+
+              '<p>Actually, a function can return only one result.</p>'+
+              '<p>However, lists allow you to package up several values into one object, which can be returned by a function.'+
+              'Here is a function <tt>minmax</tt> that returns both the smaller and the larger of two numbers:</p>'+
+              '<p><code>minmax = \\x y -> [min x y, max x y]</code></p>'+
+              '<p>(You can ignore the error message)</p>'+
+              '<p>So, for example <code>minmax 3 8</code> and <code>minmax 8 3</code> both return the list [3,8].</p>';
         }
         },
 
@@ -194,23 +192,28 @@ tutorial12.pages.list =
         {
           trigger:function(result){
             // This is triggered on the previous expression
-              return /^\s+Precedence\s+parsing\s+error/.test(result.error);
+        	  //*** Here check if they did run that function and return the result, if they didn't just carry on
+        	  return /\[\w+\]/.test(result.type);
           },
           guide:function(result){
-          tutorial12.continueOnError = true;
-          return  "<p>Again, that did not work as expected: Haskell does not allow you to combine 'infix' operations (like 3+4) with 'prefix' operations (like '-4').</p>"+
-          "<p>So what should we do? Enclose the infix operation in parentheses: <code>4+(-3)</code></p>";
+        	  return "<p>You can write a constant list, e.g. <code>[2,4,6,8]</code>, and as this is a valid expression you can assign it to a variable, e.g."+
+        	  '<code>mylist = [2,4,6,8]</code></p>'+
+        	  '<p>But the elements of a list can also be expressions, which are evaluated when they are accessed. Suppose you define:</p>'+
+        	  '<p><code>answer = 42</code></p>'+
+        	  "<p><code>yourlist = [7, answer+1, 7*8]</code></p>";
         }
         },
 
         // Expression Syntax - Corner case 4
         {
-          trigger:tutorial12.pages.isNum,
+          trigger:function(result){
+          
+          //*** Here need to check that they actually did something like that, if they did return the result
+        	  return /\[\w+\]/.test(result.type);
+          },
+          
           guide:function(result){
-          tutorial12.continueOnError = false;
-          var valid = /[0-9]+\+\-[0-9]+/.test(result.expr);
-          var next_step = "<p>And yes, that one worked! So in general it is best to enclose negative numbers with parentheses in expressions. Type <code>next</code> for the next lesson.</p>";
-              return next_step;
+        	  return "<p>Then when you evalue <code>yourlist</code> you get <code>"+result.value+"</code>.</p>";
        }
 
 

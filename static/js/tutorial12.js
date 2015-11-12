@@ -118,6 +118,10 @@ tutorial12.preCommandHook = function(line,report){
         tutorial12.undo();
         report();        
         return [true,'True'];
+    } else if (/^context/.test(line.trim()) ) {        
+        report();     
+        alert('{ '+ tutorial12.equations.join(';') +' }');
+        return [true,'True'];        
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
         var varname = chunks[1];
@@ -173,7 +177,9 @@ tutorial12.preCommandHook = function(line,report){
         return [false,line];
     } else {
         // OK, an expression that is not an equation
+    	
         line = 'let {'+ tutorial12.equations.join(';') +' } in '+line.trim();
+        alert(line);
     }
     return [false,line];
 };
@@ -331,6 +337,19 @@ tutorial12.makeGuidSamplesClickable = function() {
             tutorial12.controller.inner.click();
         });
     });
+    $('span.code').each(function(){
+    	
+        $(this).css('cursor','pointer');
+        
+//        $(this).attr('title','Click me to insert "' +
+//                     $(this).text() + '" into the console.');
+        $(this).click(function(){
+//        	$(this).css('color','blue');
+            tutorial12.controller.promptText($(this).attr('data-step'));            
+            tutorial12.controller.inner.click();            
+        });
+    });
+    
 }
 
 // Display the currently active users
