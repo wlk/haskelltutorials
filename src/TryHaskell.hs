@@ -3,6 +3,7 @@
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE CPP #-}
 {-# OPTIONS -fno-warn-type-defaults -fno-warn-deprecations #-}
 
 -- | Try Haskell!  
@@ -60,8 +61,10 @@ import           Snap.Http.Server hiding (Config)
 import           Snap.Util.FileServe
 import           System.Environment (getEnvironment, lookupEnv)
 import           System.Exit
-import           System.IO (stderr, hPutStrLn)
-import           System.Locale
+import           System.IO (stderr, hPutStrLn) --
+#if ! MIN_VERSION_time(1,5,0)
+import           System.Locale --
+#endif
 import           System.Process.Text.Lazy
 import           TryHaskell.BuildPage
 import           TryHaskell.Tutorials
@@ -139,7 +142,7 @@ users statsv =
      writeLBS (encode (map (show . hash *** epoch)
                            (M.toList (statsUsers stats))))
   where epoch :: UTCTime -> Integer
-        epoch = read . formatTime System.Locale.defaultTimeLocale "%s"
+        epoch = read . formatTime defaultTimeLocale "%s"
 {-
 -- | Log the current user's visit to the stats table.
 logVisit :: MVar Stats -> Snap ByteString
@@ -229,8 +232,7 @@ muevalToJson ex is fs =
                      then helpfulMsg
                      else e)))
        _ -> return (codify result)
-  where helpfulMsg = "No result, evaluator might've been \
-                     \killed due to heavy traffic. Retry?"
+  where helpfulMsg = "No result, evaluator might've been killed due to heavy traffic. Retry?"
         codify result =
           Aeson.object
             (case result of
