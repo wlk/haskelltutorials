@@ -77,128 +77,147 @@ tutorial2.pages.list =
         {lesson:1,
          title:'Boolean Expressions',
          guide:
-         '<h3>Boolean Expressions</h3>'
-         + "<p>Like many other languages, the double-equals operator is used for testing value equality. "
-         +"<p>Type an integer equality test, e.g. <code>5==5</code>,  and observe that it evaluates to True.</p>"
+         '<h3>Boolean Equality</h3>'
+         + "<p>Like many other languages, the double-equals operator == is used for testing value equality. "
+         +"<p>Type an integer equality test, e.g. <code>42==42</code>,  and observe that it evaluates to True.</p>"
         },
         {
           trigger:tutorial2.pages.isBool, 
           guide:function(result){
-            if (!result) result = {expr:'True',value:'True'};
+            if (!result) result = {expr:'42==42',value:'True'};
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
             var complied = /True/.test(result.value);            
             var valid = /True|False/.test(result.value);
-            var next_step = "<p>Now use the /= operator to test for non-equality, e.g. <code>1 /= 2</code>, and observe that it evaluates to the expected result.</p>";
+            var next_step = "<p>Now compare two different integer values for equality, e.g. <code>1 == 2</code>, and observe that the result is False.</p>";
             if (valid) {
               if (complied) {
                 return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
               } else {
-                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as expected.</p>"+next_step;
+                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
               }
             } else {
                 return '<p>'+
-                    "What you typed does not seem to be a simple integer arithmetic expression, but it looks like it worked all right!"
+                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
                     +'</p>'+next_step;
 		
             }
           }
 
         },
-        // Expression Syntax
-
+        // Compare for inequality now
         {lesson:2,
-         title:'Syntax of Expressions',
-         trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            if (!result) result = {expr:'6*7',value:42};
+         title:'The not-equals operator',
+         trigger:tutorial2.pages.isBool,
+           guide:function(result){
+            if (!result) result = {expr:'1==2',value:'False'};
+            var complied = /False/.test(result.value);            
+            var valid = /True|False/.test(result.value);
             var next_step =
-            "<h3>Syntax of Expressions</h3>"
-            +"<p>You can use parenthesis to group subexpressions, "
-            +"e.g. <code>(3+4)*6</code>, but they are optional.</p>"
-            +"<p>The arithmetic operations have the same precedence as in maths.<p></p>For example <code>3+4*6</code> means <code>3+(4*6)</code>.</p>";            
-            return next_step;
-        }
+            "<h3>The not-equals operator</h3>"
+            +"<p>Use the /= operator (it's supposed to look like an equals with a line through it), to test for inequality"
+            +"e.g. <code>1/=2</code>. </p>";
+            if (valid) {
+		if (complied) {
+                    return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
+		} else {
+                    return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
+		}
+            } else {
+                return '<p>'+
+                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
+                    +'</p>'+next_step;
+		
+            }
+           }
         },
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+         trigger:tutorial2.pages.isBool,
           guide:function(result){
-            return "<p>You can let Haskell prove this for you: try <code>3+(4*6) == 3+4*6</code>.</p>";
+            return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\"==\"hola\"</code>.</p>";
           }
-        },        
+        },
+
+        {
+         trigger:tutorial2.pages.isBool,
+          guide:function(result){
+            return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True/=False</code>.</p>";
+          }
+        },
+
         
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
-            if (!result) result = {expr:'3+(4*6) == 3+4*6',value:'True'};
+            if (!result) result = {expr:'True/=False',value:'True'};
             var complied = /Bool/.test(result.type);            
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /^[0-9\.\+\-\*\(\)]+\s*==\s*[0-9\.\+\-\*\(\)]+\s*$/.test(rexpr);
+            var valid = /True|False/.test(rexpr);
             
             var msg="";
             if (valid) {
-                msg="<p>So this expression returned "+result.value+" and it illustrates the use of the equality test operator.</p>";
+                msg="<p>So this expression returned "+result.value+", illustrating the use of the equality test operator.</p>";
             } 
             var next_step =
-            "<p>You can nest as many parentheses as you like (even if it looks silly): <code>((6))*(((7)))</code></p>";
+		  "<p>What happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
             return msg+next_step;
           }
-        },
-
-        // Expression Syntax - Corner cases 1
-        {trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            if (!result) result = {expr:'((6))*(((7)))',value:42};
-            tutorial2.continueOnError = true;
-            var next_step =
-            "<h3>Special Cases</h3><p>There are some special cases, in particular regarding the '-' sign. For example, try <code>4+-3</code>.";
-            return next_step;
-        }
         },
 
         // Expression Syntax - Corner cases 2
         {
           trigger:function(result){
-              return /^\s+Not\s+in\s+scope:\s+.[\+\-\*\/][\+\-\*\/]./.test(result.error);
+	      var typeError =
+		  (/^\s+Couldn\'t\s+match\s+expected\s+type/.test(result.error)) || 
+		  (/^\s+No\s+instance\s+for/.test(result.error));
+              return typeError;
           },
           guide:function(result){
           tutorial2.continueOnError = true;
-          var matches = result.error.match(/^\s+Not\s+in\s+scope:\s+.([\+\-\*\/][\+\-\*\/])./);
-          return   "<p>As you can see, this fails:  Haskell thinks you wanted to use a special operation '"+matches[1]+"'.</p>"
-            +"<p>Now, try <code>4+ -3</code> (that's right, just an extra space).</p>";
+          return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types limit the operations we can apply to particular values.</p>" +
+		  "<p>Haskell supports the standard comparison/relational operators, <, <=, >, >=. Try a simple comparison, e.g. <code>10 &gt; 9</p>";
         }
         },
 
         // Expression Syntax - Corner cases 3
         {
-          trigger:function(result){
-            // This is triggered on the previous expression
-              return /^\s+Precedence\s+parsing\s+error/.test(result.error);
-          },
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
-          tutorial2.continueOnError = true;
-          return  "<p>Again, that did not work as expected: Haskell does not allow you to combine 'infix' operations (like 3+4) with 'prefix' operations (like '-4').</p>"+
-          "<p>So what should we do? Enclose the infix operation in parentheses: <code>4+(-3)</code></p>";
+          return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4].</p>";
         }
         },
 
-        // Expression Syntax - Corner case 4
+// should we talk about string comparisons, 
+// about Eq class?
+
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
           tutorial2.continueOnError = false;
-          var valid = /[0-9]+\+\-[0-9]+/.test(result.expr);
-          var next_step = "<p>And yes, that one worked! So in general it is best to enclose negative numbers with parentheses in expressions. Type <code>next</code> for the next lesson.</p>";
+          var next_step = "<p>Now let's think about list membership. We want a boolean function that returns true if a value is part of a list, and false otherwise. This is the elem function. Try <code>elem 1 [1,2,3]</code></p>";
               return next_step;
-       }
-
-
+	}
         },
 
-// Functions
+	{
+	  trigger:tutorial2.pages.isBool,
+	  guide:function(result){
+            if (!result) result = {expr:'elem 1 [1,2,3]',value:'True'};
+            var complied = /Bool/.test(result.type);            
+            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
+            var valid = /True|False/.test(result.value);
+            var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
+	    var element = matches[1];
+	    alert('this regexpr finds element ' + element);
+            var msg="";
+	      
+	}
+	},
+
+// List membership
         {lesson:3,
          title:'Functions',
          trigger:function(result){
