@@ -31,8 +31,6 @@ tutorial2.pages.isNum = function(result) {
     return retval;
 }
 
-<<<<<<< HEAD
-=======
 tutorial2.pages.isBool = function(result) {
     return (result.type == "Bool");
 }
@@ -41,17 +39,12 @@ tutorial2.pages.isBool = function(result) {
     
 
 
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
 // All pages
 tutorial2.pages.list =
     [
       {title:'Haskell Interactive Tutorials',
        guide:
-<<<<<<< HEAD
-       
-=======
        '<div class="indent">' +
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
        '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial2.url+'">'+tutorial2.url+'</a>.</p>'+
@@ -65,26 +58,6 @@ tutorial2.pages.list =
        '<code title="Click me to insert &quot;23 * 36&quot; into the console." style="cursor: pointer;">23 * 36</code> or <code title="Click me to insert &quot;reverse ' +
        '&quot;hello&quot;&quot; into the console." style="cursor: pointer;">reverse ' +
        '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
-<<<<<<< HEAD
-       '</p>'        
-      },
-        {title:'Tutorial 2: Functions and Lists',
-         guide:
-//         '<div class="indent">' +
-         '<h3>Tutorial 2: The Essentials: Functions and Lists</h3>' +
-         '<p>This tutorial will guide you through two essential concepts of the Haskell language: functions and lists. \
-         You will learn the syntax, how to create and use functions and lists.</p>'+
-         '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
-         '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
-         '<p>This tutorial has XX sections:</p>'+
-         '<ol>'+
-         '<li>Defining a Function (<code>step3</code>)</li>'+
-         '<li>Functions without a Name: Lambda Functions(<code>step5</code>)</li>'+
-         '<li>Lists (<code>step12</code>)</li>'+
-         '<li>XX (<code>step19</code>)</li>'+
-         '</ol>'
-//         +'</div>'
-=======
        '</p>' +
 
        '</div>'
@@ -96,211 +69,155 @@ tutorial2.pages.list =
          '<p>Let\'s get some more experience with Boolean values and expressions.</p>'+
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
          '</div>'
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
 
         // Simple integer arithmetic
         {lesson:1,
-<<<<<<< HEAD
-         title:'Defining a function',
-         guide:
-         '<h3>Defining a function</h3>'+
-        	 '<p>In Haskell, many functions are pre-defined in a standard library called the Prelude.'+
-        	 'We have already encountered some of them in the previous tutorial, e.g. <tt>abs</tt>, <tt>max</tt> and <tt>min</tt>.</p>.'+
-
-        	 '<p>But the essence of functional programming is defining your own functions to solve your problems!</p>'+
-
-        	 '<p>A function is defined by an equation. There are two ways to define a function. You can either define a named function, e.g.'+
-
-        	 	'<code>f x = x+1</code></p>'+
-
-        	 	'<p>The left hand side (lhs) of the equation looks like a variable – and that’s what it is! '+
-        	 	'The right hand side (rhs) is an expression that uses the local variable and defines the result of the expression.</p>'+
-        	 	"<p>If you enter the equation above or a similar one, you'll see it does indeed return an expression.</p>"
-        },
-        {
-          trigger:function(result){
-              return /Expr/.test(result.type);
-          }, 
-          guide:function(result){
-        	 	return '<p>To use the function, you apply it to an argument, e.g.'+
-
-        	 	'<code>f 3</code>.</p>'
-
-                    }
-        },        	 
-        
-        {
-            trigger:tutorial2.pages.isNum,
-            guide:function(result){
-          	 	return         	 '<p>You can of also define functions with multiple arguments, e.g.'+
-
-        	 	'<code>add3nums x y z = x + y + z</code>.</p>'
-            }
-        },   
-        {
-        trigger:function(result){
-            return /Expr/.test(result.type);
-        }, 
-        guide:function(result){
-      	 	return '<p>To use it, e.g. <code>10 + 4* add3nums 1 2 3</code>.</p>'   
-        }
-      },      
-
-        // Lambda Functions
-
-        {lesson:2,
-         title:'Lambda Functions',
-         trigger:tutorial2.pages.isNum,
-          guide:function(result){
-        	  return
-            "<h3>Functions without a Name: Lambda Functions</h3>"
-        	  '<p>You can also define a function without a name, known as a "lambda function" (or "anonymous function" in other languages),'+
-        	  'for example <code>\\x -> x+1</code>.</p>'+
-
-        	  '<p>On the lhs of the arrow you list the arguments, on the rhs the expression.</p>'+
-        	  '<p>If you entered this expression in the terminal you got an error, but this is because the interpreter does not know how to print the lambda function.</p>'+
-        	  '<p>You can use this function straightaway, for example:'+
-        	  
-        		'<code>(\\x -> x+1 ) 4</code>.</p>'
-        }
-        },
-        
-        // Lambda Functions - cont'd
-        {
-          trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            return "<p>Or you can use an equation to assign the lambda function to a variable: "+
-
-	"<code>fl = \\x -> x+1</code>.</p>";
-=======
          title:'Boolean Expressions',
          guide:
-         '<h3>Boolean Expressions</h3>'
-         + "<p>Like many other languages, the double-equals operator is used for testing value equality. "
-         +"<p>Type an integer equality test, e.g. <code>5==5</code>,  and observe that it evaluates to True.</p>"
+         '<h3>Boolean Equality</h3>'
+         + "<p>Like many other languages, the double-equals operator == is used for testing value equality. "
+         +"<p>Type an integer equality test, e.g. <code>42==42</code>,  and observe that it evaluates to True.</p>"
         },
         {
           trigger:tutorial2.pages.isBool, 
           guide:function(result){
-            if (!result) result = {expr:'True',value:'True'};
+            if (!result) result = {expr:'42==42',value:'True'};
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
             var complied = /True/.test(result.value);            
             var valid = /True|False/.test(result.value);
-            var next_step = "<p>Now use the /= operator to test for non-equality, e.g. <code>1 /= 2</code>, and observe that it evaluates to the expected result.</p>";
+            var next_step = "<p>Now compare two different integer values for equality, e.g. <code>1 == 2</code>, and observe that the result is False.</p>";
             if (valid) {
               if (complied) {
                 return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
               } else {
-                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as expected.</p>"+next_step;
+                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
               }
             } else {
                 return '<p>'+
-                    "What you typed does not seem to be a simple integer arithmetic expression, but it looks like it worked all right!"
+                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
                     +'</p>'+next_step;
 		
             }
           }
 
         },
-        // Expression Syntax
-
+        // Compare for inequality now
         {lesson:2,
-         title:'Syntax of Expressions',
-         trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            if (!result) result = {expr:'6*7',value:42};
+         title:'The not-equals operator',
+         trigger:tutorial2.pages.isBool,
+           guide:function(result){
+            if (!result) result = {expr:'1==2',value:'False'};
+            var complied = /False/.test(result.value);            
+            var valid = /True|False/.test(result.value);
             var next_step =
-            "<h3>Syntax of Expressions</h3>"
-            +"<p>You can use parenthesis to group subexpressions, "
-            +"e.g. <code>(3+4)*6</code>, but they are optional.</p>"
-            +"<p>The arithmetic operations have the same precedence as in maths.<p></p>For example <code>3+4*6</code> means <code>3+(4*6)</code>.</p>";            
-            return next_step;
-        }
+            "<h3>The not-equals operator</h3>"
+            +"<p>Use the /= operator (it's supposed to look like an equals with a line through it), to test for inequality"
+            +"e.g. <code>1/=2</code>. </p>";
+            if (valid) {
+		if (complied) {
+                    return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
+		} else {
+                    return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
+		}
+            } else {
+                return '<p>'+
+                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
+                    +'</p>'+next_step;
+		
+            }
+           }
         },
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+         trigger:tutorial2.pages.isBool,
           guide:function(result){
-            return "<p>You can let Haskell prove this for you: try <code>3+(4*6) == 3+4*6</code>.</p>";
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
+            return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\"==\"hola\"</code>.</p>";
           }
-        },        
+        },
+
+        {
+         trigger:tutorial2.pages.isBool,
+          guide:function(result){
+            return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True/=False</code>.</p>";
+          }
+        },
+
         
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
-            if (!result) result = {expr:'3+(4*6) == 3+4*6',value:'True'};
+            if (!result) result = {expr:'True/=False',value:'True'};
             var complied = /Bool/.test(result.type);            
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /^[0-9\.\+\-\*\(\)]+\s*==\s*[0-9\.\+\-\*\(\)]+\s*$/.test(rexpr);
+            var valid = /True|False/.test(rexpr);
             
             var msg="";
             if (valid) {
-                msg="<p>So this expression returned "+result.value+" and it illustrates the use of the equality test operator.</p>";
+                msg="<p>So this expression returned "+result.value+", illustrating the use of the equality test operator.</p>";
             } 
             var next_step =
-            "<p>You can nest as many parentheses as you like (even if it looks silly): <code>((6))*(((7)))</code></p>";
+		  "<p>What happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
             return msg+next_step;
           }
-        },
-
-        // Expression Syntax - Corner cases 1
-        {trigger:tutorial2.pages.isNum,
-          guide:function(result){
-            if (!result) result = {expr:'((6))*(((7)))',value:42};
-            tutorial2.continueOnError = true;
-            var next_step =
-            "<h3>Special Cases</h3><p>There are some special cases, in particular regarding the '-' sign. For example, try <code>4+-3</code>.";
-            return next_step;
-        }
         },
 
         // Expression Syntax - Corner cases 2
         {
           trigger:function(result){
-              return /^\s+Not\s+in\s+scope:\s+.[\+\-\*\/][\+\-\*\/]./.test(result.error);
+	      var typeError =
+		  (/^\s+Couldn\'t\s+match\s+expected\s+type/.test(result.error)) || 
+		  (/^\s+No\s+instance\s+for/.test(result.error));
+              return typeError;
           },
           guide:function(result){
           tutorial2.continueOnError = true;
-          var matches = result.error.match(/^\s+Not\s+in\s+scope:\s+.([\+\-\*\/][\+\-\*\/])./);
-          return   "<p>As you can see, this fails:  Haskell thinks you wanted to use a special operation '"+matches[1]+"'.</p>"
-            +"<p>Now, try <code>4+ -3</code> (that's right, just an extra space).</p>";
+          return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types limit the operations we can apply to particular values.</p>" +
+		  "<p>Haskell supports the standard comparison/relational operators, <, <=, >, >=. Try a simple comparison, e.g. <code>10 &gt; 9</p>";
         }
         },
 
         // Expression Syntax - Corner cases 3
         {
-          trigger:function(result){
-            // This is triggered on the previous expression
-              return /^\s+Precedence\s+parsing\s+error/.test(result.error);
-          },
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
-          tutorial2.continueOnError = true;
-          return  "<p>Again, that did not work as expected: Haskell does not allow you to combine 'infix' operations (like 3+4) with 'prefix' operations (like '-4').</p>"+
-          "<p>So what should we do? Enclose the infix operation in parentheses: <code>4+(-3)</code></p>";
+          return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4].</p>";
         }
         },
 
-        // Expression Syntax - Corner case 4
+// should we talk about string comparisons, 
+// about Eq class?
+
         {
-          trigger:tutorial2.pages.isNum,
+          trigger:tutorial2.pages.isBool,
           guide:function(result){
           tutorial2.continueOnError = false;
-          var valid = /[0-9]+\+\-[0-9]+/.test(result.expr);
-          var next_step = "<p>And yes, that one worked! So in general it is best to enclose negative numbers with parentheses in expressions. Type <code>next</code> for the next lesson.</p>";
+          var next_step = "<p>Now let's think about list membership. We want a boolean function that returns true if a value is part of a list, and false otherwise. This is the elem function. Try <code>elem 1 [1,2,3]</code></p>";
               return next_step;
-       }
-
-
+	}
         },
 
-// Functions
+	{
+	  trigger:tutorial2.pages.isBool,
+	  guide:function(result){
+            if (!result) result = {expr:'elem 1 [1,2,3]',value:'True'};
+            var complied = /Bool/.test(result.type);            
+            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
+            var valid = /True|False/.test(result.value);
+            var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
+	    var element = matches[1];
+	    alert('this regexpr finds element ' + element);
+            var msg="";
+	      
+	}
+	},
+
+// List membership
         {lesson:3,
          title:'Functions',
          trigger:function(result){
