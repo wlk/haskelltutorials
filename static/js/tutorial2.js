@@ -125,10 +125,7 @@ tutorial2.preCommandHook = function(line,report){
         report();
         return [true,'True'];
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
-<<<<<<< HEAD
     	// This is an equation.     	
-=======
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
         var nline = line.trim();
         tutorial2.isEq = true;
         tutorial2.equations.push(nline);
