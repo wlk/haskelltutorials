@@ -51,8 +51,9 @@ bodyHeader_tut :: Int -> Html ()
 bodyHeader_tut tut_no =
   div_ [class_ "haskell-icon-container"]
        (a_ [href_ (T.pack ("/tutorial"++(show tut_no)))]
-           (table_ (tr_ (do td_ (p_ [class_ "haskell-icon"] mempty)
-                            td_ [class_ "try-haskell"] "Haskell Tutorials"))))
+           (table_ (tr_ (do td_ (img_ [src_ "/static/UoG_colour.png", alt_ "[U. Glasgow logo]", width_ "220"])
+                            td_ [class_ "try-haskell"] " Haskell Tutorials "
+                            td_ (p_ [class_ "haskell-icon"] mempty)))))
 
 -- | The footer with links and such.
 bodyFooter_tut :: Html ()
