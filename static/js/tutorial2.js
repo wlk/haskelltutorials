@@ -136,7 +136,6 @@ tutorial2.preCommandHook = function(line,report){
          var chunks = nline.split(/\s+=\s+/);
          var lhs = chunks[0];
          var rhs=chunks[1];
-<<<<<<< HEAD
          // Now, if the rhs is a lambda we should not return the lhs
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
@@ -144,8 +143,6 @@ tutorial2.preCommandHook = function(line,report){
         	 isLambda = true;      
         	 alert("LAMBDA:"+rhs)
          }
-=======
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
          //lhs.replace(/\W+/g,'');
          //rhs.replace(/\W+/g,'');
 //         alert('PRE:<'+lhs+'><'+rhs+'>');
@@ -158,15 +155,11 @@ tutorial2.preCommandHook = function(line,report){
              tutorial2.isEq = false;
              line = 'let '+nline+' in '+lhs;
          } else {
-<<<<<<< HEAD
-        	 if (!isLambda) {
-             line = context + lhs;
-        	 } else {
-        		 line = context + '"'+rhs+'"';
-        	 }
-=======
-             line = context + lhs;
->>>>>>> 4e9540a8f87e7deabe9bda3e17bd0fe2f9ecb510
+             if (!isLambda) {
+		 line = context + lhs;
+             } else {
+        	 line = context + '"'+rhs+'"';
+             }
          }
         return [false,line];
     } else {
