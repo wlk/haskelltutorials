@@ -230,11 +230,19 @@ tutorial2.pages.list =
             var valid = /True|False/.test(result.value);
             var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
 	    var element = matches[1];
-	    alert('this regexpr finds element ' + element);
-            var msg="";
+            var msg="<p>The element " + element + " is " + (result.value)?"":" not " + "part of the list.";
+	    var next_step = msg + "<p>The elem function can be written infix, like an arithmetic operator, by enclosing its name in backquotes ``. Try <code>3.1 `elem` [1.2, 2.3, 3.1, 4.5]</code>."
+            return next_step;
 	      
 	}
 	},
+	{
+	  trigger:tutorial2.pages.isBool,
+	  guide:function(result){
+	      var msg ="<p>In fact, Haskell permits any two-argument function to be written as an infix operator using backquote characters.";
+	      return msg;
+          }
+        },
 
 // List membership
         {lesson:3,
