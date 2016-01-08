@@ -114,8 +114,8 @@ tutorial2.pages.list =
             var valid = /True|False/.test(result.value);
             var next_step =
             "<h3>The not-equals operator</h3>"
-            +"<p>Use the /= operator (it's supposed to look like an equals with a line through it), to test for inequality"
-            +"e.g. <code>1/=2</code>. </p>";
+            +"<p>Use the /= operator (it's supposed to look like an equals sign with a line through it), to test for inequality, "
+            +"e.g. <code>1 /= 2</code>. </p>";
             if (valid) {
 		if (complied) {
                     return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
@@ -135,14 +135,32 @@ tutorial2.pages.list =
         {
          trigger:tutorial2.pages.isBool,
           guide:function(result){
-            return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\"==\"hola\"</code>.</p>";
+	      tutorial2.continueOnError = true;
+            return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\" == \"hola\"</code>.</p>";
           }
+        },
+
+	{
+	 // this is a complex trigger - looking for an error or a correctly typed result!
+         trigger:function(result) {
+	     variableError = /^Not\s+in\s+scope/.test(result.error)
+	     booleanResult = result.type == "Bool";
+	     return variableError || booleanResult
+	 },
+         guide:function(result){
+	     msg = "";
+	     if (/^Not\s+in\s+scope/.test(result.error)) {
+		 msg = "<p>Did you forget to use double quotes \" \" around your strings? If so, Haskell thinks that you are referring to named values (like program variables)???"
+	     }
+             tutorial2.continueOnError = false;
+             return   msg + "<p> Now try String inequality <code>\"foo\" /= \"bar\"</code></p>";
+         }
         },
 
         {
          trigger:tutorial2.pages.isBool,
           guide:function(result){
-            return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True/=False</code>.</p>";
+            return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True /= False</code>.</p>";
           }
         },
 
@@ -162,7 +180,8 @@ tutorial2.pages.list =
                 msg="<p>So this expression returned "+result.value+", illustrating the use of the equality test operator.</p>";
             } 
             var next_step =
-		  "<p>What happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
+		  "<p>Now, what happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
+	      tutorial2.continueOnError = true;
             return msg+next_step;
           }
         },
@@ -176,8 +195,8 @@ tutorial2.pages.list =
               return typeError;
           },
           guide:function(result){
-          tutorial2.continueOnError = true;
-          return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types limit the operations we can apply to particular values.</p>" +
+          tutorial2.continueOnError = false;
+          return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types <em>limit</em> the operations we can apply to particular values.</p>" +
 		  "<p>Haskell supports the standard comparison/relational operators, <, <=, >, >=. Try a simple comparison, e.g. <code>10 &gt; 9</p>";
         }
         },
@@ -186,7 +205,7 @@ tutorial2.pages.list =
         {
           trigger:tutorial2.pages.isBool,
           guide:function(result){
-          return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4].</p>";
+          return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4]</p>";
         }
         },
 
