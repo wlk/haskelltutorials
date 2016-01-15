@@ -144,13 +144,17 @@ tutorial2.pages.list =
 	 // this is a complex trigger - looking for an error or a correctly typed result!
          trigger:function(result) {
 	     variableError = /^Not\s+in\s+scope/.test(result.error)
+	     missingQuoteError = /lexical\s+error\s+in\s+string/.test(result.error)
 	     booleanResult = result.type == "Bool";
-	     return variableError || booleanResult
+	     return variableError || missingQuoteError || booleanResult
 	 },
          guide:function(result){
 	     msg = "";
 	     if (/^Not\s+in\s+scope/.test(result.error)) {
 		 msg = "<p>Did you forget to use double quotes \" \" around your strings? If so, Haskell thinks that you are referring to named values (like program variables)???"
+	     }
+	     if (/lexical\s+error\s+in\s+string/.test(result.error)) {
+		 msg = "<p>Did you forget a double quote \" at the beginning or end of one of your strings?"
 	     }
              tutorial2.continueOnError = false;
              return   msg + "<p> Now try String inequality <code>\"foo\" /= \"bar\"</code></p>";
