@@ -47,7 +47,7 @@ tutorial2.pages.list =
        '<div class="indent">' +
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial2.url+'">'+tutorial2.url+'</a>.</p>'+
+       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 2 it is <a href="'+tutorial2.url+'">'+tutorial2.url+'</a>.</p>'+
        '<br>'+
        '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
        '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
@@ -62,10 +62,10 @@ tutorial2.pages.list =
 
        '</div>'
       },
-        {title:'Tutorial 2: Booleans and Lists',
+        {title:'Tutorial 2: Boolean Values and Expressions',
          guide:
          '<div class="indent">' +
-         '<h3>Tutorial 2: Booleans and Lists</h3>' +
+         '<h3>Tutorial 2: Boolean Values and Expressions</h3>' +
          '<p>Let\'s get some more experience with Boolean values and expressions.</p>'+
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
          '</div>'
@@ -213,6 +213,12 @@ tutorial2.pages.list =
         }
         },
 
+	{
+	  trigger:tutorial2.pages.isBool,
+	  guide:function(result) {
+	    return "<p> Since strings are lists of characters in Haskell, we can do the same kinds of comparison operations on strings. Check whether Aadvark comes before Aaronic in the dictionary with this code: <code>&quot;Aardvark&quot; &lt; &quot;Aaronic&quot;";
+	  }
+	},
 // should we talk about string comparisons, 
 // about Eq class?
 
@@ -234,8 +240,8 @@ tutorial2.pages.list =
             var valid = /True|False/.test(result.value);
             var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
 	    var element = matches[1];
-            var msg="<p>The element " + element + " is " + (result.value)?"":" not " + "part of the list.";
-	    var next_step = msg + "<p>The elem function can be written infix, like an arithmetic operator, by enclosing its name in backquotes ``. Try <code>3.1 `elem` [1.2, 2.3, 3.1, 4.5]</code>."
+            var msg="<p>You see that element " + element + " is " + ((result.value)?"":" not ") + "part of the list.</p>";
+	    var next_step = msg + "<p>The elem function can be written infix, like an arithmetic operator, by enclosing its name in backquotes ``. Try <code>3 `elem` [1, 2, 3, 4, 5]</code>."
             return next_step;
 	      
 	}
@@ -243,291 +249,35 @@ tutorial2.pages.list =
 	{
 	  trigger:tutorial2.pages.isBool,
 	  guide:function(result){
-	      var msg ="<p>In fact, Haskell permits any two-argument function to be written as an infix operator using backquote characters.";
-	      return msg;
+	      var next_step ="<p>In fact, Haskell permits any two-argument function to be written as an infix operator using backquote characters. For a further example, try the max function as an infix operator: <code>42 `max` 13</code>";
+	      return next_step;
           }
         },
 
-// List membership
-        {lesson:3,
-         title:'Functions',
-         trigger:function(result){
-               return true;
-         },
-
-          guide:function(result){
-          if (!result) result = {expr:'4+-3',value:1};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /[0-9]+\+\-[0-9]+/.test(rexpr);
-          var next_step = "<h3>Functions</h3>"
-          +"<p>A function has a textual name (e.g. 'abs' or 'sin') rather than an operator.</p><p>It takes argument(s), performs some computation, and produces result(s).</p><p>To use a function in Haskell, you apply it to an argument: write the function followed by the argument, separated by a space.</p><p>For example try <code>abs 7</code>.";
-              return next_step;
-       }
-
-        },
-
-// Functions (2)
-        {
-          // We carry on if they typed a function and it evaluated to something numerical
-          trigger:function(result){
-                     var retval = tutorial2.pages.isNum(result);
-                     var retexpr = /^\s*\w+\s+/.test(result.expr);
-                     return retval && retexpr;
-                },
-          guide:function(result){
-          if (!result) result = {expr:'abs 7',value:7};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /abs\s+[0-9]+/.test(rexpr);
-          var msg = "";
-          if (valid) {
-            msg = "<p>As expected, applying abs to a positive number just returns its value</p>";
-          } else  {
-            msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-          }
-          return msg+"<p>Now let's try a negative number: <code>abs (-3)</code>.</p>";
-       },
-
-        },
-
-
-        // Functions (3)
-        {
-          trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'abs -3',value:3};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /abs\s+\(\s*\-[0-9]+\s*\)/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>And indeed, applying abs to a negative number returns the absolute value</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+
-            "<p>Functions can take several arguments, e.g. min and max take two arguments. The arguments are given after the function,  separated by whitespace.</p><p>For example, <code>min 3 8</code> or <code>max 3 8</code>.</p>";
-        }
-        },
-
-        // Functions (4)
-        {
-          trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'abs -3',value:3};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /\w+(\s+[\(\)\-0-9]+)+/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>See? No need for parentheses!</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+'<p>'+
-            "To combine functions you need to know their precedence. In Haskel this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
-            +'</p>';
-        }
-        },
-
-        // Functions (5)
-        {
-          trigger:function(result){
-            var retval = tutorial2.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'sqrt 9+7',value:10.0};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /sqrt\s+\d+\s*[\+\-\*]\s*\d+/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>Surprised? Haskell interprets this as <code>(sqrt 9)+7</code>, not <code>sqrt (9+7)</code>.</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+'<p>'+
-            "So now try <code>sqrt (9+7)</code>."
-            +'</p>';
-        }
-      },
-
-      // Functions (6)
-      {
-        trigger:function(result){
-          var retval = tutorial2.pages.isNum(result);
-          var retexpr = /^\s*\w+\s+/.test(result.expr);
-          return retval && retexpr;
-        },
-        guide:function(result){
-          if (!result) result = {expr:'sqrt (9+7)',value:4.0};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /sqrt\s+\(\s*\d+\s*[\+\-\*]\s*\d+\s*\)/.test(rexpr);
-          var msg = "";
-          if (valid) {
-            msg = "<p>That worked as expected!</p>"+
-            "<p>So if an argument to a function is an expression, you need to put it in parentheses.</p>";
-          } else  {
-            msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-          }
-          tutorial2.continueOnError=true;
-          return msg+'<p>'+
-          "So what about combining two functions? Try for example to apply 'min' to 'max 3 4' and '5'."
-          +'</p>';
-      }
-    },
-
-    // Functions (7)
-    {
-      trigger:function(result){
-    	  var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-    	  alert(rexpr);
-        // This can generate an error, we should test here against the actual expressions not the results
-var retval = /m(in|ax)\s+\d+\s+m(in|ax)\s+\d+\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+m(in|ax)\s+\d+\s+\d+\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+\(\s*m(in|ax)\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+\d+\s+\(\s*m(in|ax)\s+\d+\s+\d+\s*\)/.test(rexpr);
-        return retval;
-      },
-      guide:function(result){
-    	  var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-var msg="";
-                if (/min\s+\d+\s+max\s+\d+\s+\d+/.test(rexpr)) {
-msg = "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments.  You need parentheses around the inner function call, e.g. <code>min 5 (max 3 4)</code>.";
-                } else if (/min\s+max\s+\d+\s+\d+\s+\d+/.test(rexpr) ) {
-                    msg ="That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments. You need parentheses around the inner function call, e.g. <code>min (max 3 4) 5</code>.";
-                } else if (/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
-                } else if (/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
-                } else {
-                    // should not happen!
-                }
-        return msg+'<p>'+
-        "type <code>next</code> to continue to the next section"
-        +'</p>';
-    }
-  },
-// Equations
-{lesson:4,
- title:'Equations',
- trigger:function(result){
-       return true;
- },
- guide:function(result){
-
-
-var msg="<h3>Equations</h3>"
-+"<p>Equations are used to give names to values, e.g. <code>answer = 42</code>.</p>";
-return msg;
-}
-},
-
-{
-  trigger:function(result){
-    // alert(result.expr);
-    var retval = /\w+\s*=[^=><]/.test(result.expr);
-    // alert(retval);
-    return retval;
-  },
-  guide:function(result){
-    // So here we know it was an assignment
-    var msg="<p>OK, you've defined an equation, now let's use it. Just type <code>answer</code>.</p>";
-    return msg;
-  }
-},
-
-{
-  trigger:function(result){
-    return true;
-  },
-  guide:function(result){
-    var msg= "<p>Equations give names to values. So now 'answer' is just another name for '42'</p>"
-    +"<p>An equation in Haskell is a mathematical equation: it says\
-      that the left hand side and the right hand side denote the same\
-      value.</p>\
-    <p>The left hand side should be a name that you're giving a\
-      value to.</p>\
-      <p>So now you can say <code>double = answer * 2</code>.</p>";
-      return msg;
-  }
-},
-
-{
-  trigger:function(result){
-    var retval = /\w+\s*=\s*\w+\s*[\*\+\-\/]\s*\d+/.test(result.expr);
-    return retval;
-  },
-  guide:function(result){
-    var msg="But you can't say <code>answer = answer * 2</code>!";
-    tutorial2.continueOnError=true;
-    return msg;
-  }
-},
-{
-  trigger:function(result){
-    if(result.error && /Evaluation killed/.test(result.error)) {
-        // remove the last element from tutorial2.equations!
-        var drop = tutorial2.equations.pop();
-//        alert(tutorial2.equations);
-//        alert(drop);
-    }
-    return true;
-  },
-  guide:function(result){
-    var msg="<p>If you tried it, you got an error message 'Evaluation killed!'</p>\
-    <p>In a pure functional language like Haskell, you can't define a name in terms of itself.</p>\
-    <p>And furthermore, you can only assign a name once!</p>\
-    <p>For example, try <code>answer = 43</code>.</p>";
-    tutorial2.continueOnError=true;
-    return msg;
-  }
-},
-{
-  trigger:function(result){
-    if(result.error && /Conflicting/.test(result.error)) {
-        // remove the last element from tutorial2.equations!
-        var drop = tutorial2.equations.pop();
-//        alert(tutorial2.equations);
-//        alert(drop);
-    }
-    return true;
-  },
-  guide:function(result){
-	  if(/Conflicting/.test(result.error)) {
-    var msg="<p>As you can see, you get an error 'Conflicting assignments'</p>" +
-    		"<p>Reassignment is not allowed, variables are what is called 'immutable'.</p>" +
-    		"<p>This is a very important property because it means that you can always, anywhere in a program, replace a variable with its corresponding expression.</p>" +
-    		"<p>Please type <code>next</code> to continue to the recap page.</p>";
-    return msg;
-	  } else {
-		  
+	{
+	  trigger:tutorial2.pages.isNum,
+	  guide:function(result){
+	      var next_step = "<p>Also note that any Haskell infix operator, e.g. +, can be written as a prefix operator by enclosing it in parentheses, like <code>(+) 1 1</code>";
+	      return next_step;
 	  }
-  },
-},
+	},
+
 {
 	  trigger:function(result){
 	    return true;
 	  },
 	  guide:function(result){
 		  
-	    var msg="<h3>And that's the end of Tutorial 1!</h3>" +
-	    		"<p>Well done, you finished your first Haskell tutorial!.</p>" +
-	    		"<p>Let's recap what we've learned:</p>" +
-	            '<ol>'+
-	            '<li>Expressions: evaluate mathematical expressions, operators, rules of precedence and role of parenthese, infix and prefix operations.</li>'+	            
-	            '<li>Functions: calling existing functions, combining them and including them in expressions.</li>'+
-	            '<li>Equations: naming expressions using assignments, immutable variables.</li>'+
-	            '</ol>';
+	    var msg="<h3>And that's the end of Tutorial 2!</h3>" +
+	    		"<p>Well done, you finished another Haskell tutorial!.</p>" +
+	    		"<p>Let's recap what we've just discovered:</p>" +
+	            '<ul>'+
+	            '<li>Equality and Comparison Operators</li>' +
+		    '<li>Testing List membership with the elem function</li>' +
+                    '<li>Using infix and prefix operations.</li>' +
+	            '</ul></p>';
 
 	    return msg;
 	  },
 	},
-
-    ];
+]
