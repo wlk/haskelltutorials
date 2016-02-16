@@ -51,6 +51,9 @@ tutorial12.undo  = function() {
     }
 }
 
+tutorial12.wipe = function() {    
+     tutorial12.equations=[]  ;  
+}
 
 // Files in the file system.
 tutorial12.files = {
@@ -114,11 +117,16 @@ tutorial12.preCommandHook = function(line,report){
         tutorial12.setPage(2,null);
         report();
         return [true,'True'];
+    } else if (/^(rase|wipe|reset)/.test(line.trim()) ) {
+        tutorial12.wipe();
+        report();        
+        return [true,'True'];
+        
     } else if (/^undo/.test(line.trim()) ) {
         tutorial12.undo();
         report();        
         return [true,'True'];
-    } else if (/^context/.test(line.trim()) ) {        
+    } else if (/^(context|show)/.test(line.trim()) ) {        
         report();     
         alert('{ '+ tutorial12.equations.join(';') +' }');
         return [true,'True'];        
@@ -128,15 +136,18 @@ tutorial12.preCommandHook = function(line,report){
         tutorial12.forget(varname);
         report();
         return [true,'True'];
-    }  else if (/^\\/.test( line.trim() ) ) {
+    }  else if (/^\\/.test( line.trim() ) ) { // this is because application requires parentheses anyway
     	var nline = line.trim();
     	var exprs = nline.split(/\s*\-\>\s*/);
-    	line = exprs[1];
-    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
+    	//line = exprs[1];
+    	line = nline; // try to return the whole lambda function
+    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*
     	
     	// This is an equation.     	
-        var nline = line.trim();
-//        alert(nline);
+        var nnline = line.trim();
+        var nline=nnline.replace(/=/,' = ');
+        
+//        alert('HERE:'+nline);
         tutorial12.isEq = true;
         tutorial12.equations.push(nline);
         var context = '';
@@ -175,11 +186,32 @@ tutorial12.preCommandHook = function(line,report){
         	 }
          }
         return [false,line];
+    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)+\s*(=[^=\>\<]|\|)/.test( line.trim() ) ) {        
+    	// This is an equation for a function.     
+    	// Return a lambda function e.g. f x = x => return \x -> x
+        var nline = line.trim();
+        var chunks=nline.split(/=/);
+        nline = chunks.join(" = "); // how ugly! but .replace() does not work in FF 43 on Mac        
+//        alert(nline);
+        var chunks = nline.split(/\s+/);
+        chunks.shift();        
+        var retval = '\\'+chunks.join(' ');
+        var retval2 = retval.replace(/=/,'->');
+//        alert(nline+' => ' + retval2);
+        tutorial12.isEq = true;
+        tutorial12.equations.push(nline);
+        var context = '';
+        if (tutorial12.equations.length>0) {
+        	context = 'let {'+ tutorial12.equations.join(';') +' } in '+retval2;//'True';
+        }
+        line = context;                
+        return [false,line];
+    	
     } else {
         // OK, an expression that is not an equation
     	
         line = 'let {'+ tutorial12.equations.join(';') +' } in '+line.trim();
-        alert(line);
+//        alert(line);
     }
     return [false,line];
 };
@@ -242,9 +274,28 @@ tutorial12.ajaxCommand = function(line,report,stdin){
                 tutorial12.controller.continuedPrompt = false;
             } else {
                 if(result.error !== undefined){
+//                	alert('ERROR:'+result.error);
+                	if (/No\ instance\ for\ .Typeable/.test(result.error)) {
+//                		alert(args.exp);
+                		tutorial12.continueOnError=true;
+                		result.error = ":: ? -> ?";
+                	} else
+                	if (/No\ instance\ for\ .Show/.test(result.error)) {
+//                		alert(result.error);
+//                		tutorial12.continueOnError=true;
+                		result.error = "Sorry, I can't display this result.";
+                	}
+//                	else
+//                		if (/No\ instance\ for\ ./.test(result.error)) {
+//                    		tutorial12.continueOnError=true;
+//                    		result.error = ":: Expr";
+//                    	}
+//                	if (/Could\ not\ deduce\ .Ord/.test(result.error)) {
+//                		
+//                	}
 // A type error goes here,
 // What I want is the option to carry on
-                    result.expr = args.exp                    
+                    result.expr = args.exp;                    
                     if (tutorial12.continueOnError) {
                         if(tutorial12.successHook != null) {
                             tutorial12.successHook(result);

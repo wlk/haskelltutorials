@@ -477,7 +477,7 @@ return msg;
 	  },
 	  guide:function(result){
 		  
-	    var msg="<h3>And that's the end of Tutorial 1!</h3>" +
+	    var msg="<h3>And that's the end of Tutorial 1.1!</h3>" +
 	    		"<p>Well done, you finished your first Haskell tutorial!.</p>" +
 	    		"<p>Let's recap what we've learned:</p>" +
 	            '<ol>'+

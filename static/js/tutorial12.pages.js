@@ -31,6 +31,18 @@ tutorial12.pages.isNum = function(result) {
     return retval;
 }
 
+// Added by WV
+tutorial12.pages.isBool = function(result) {
+  var retval = result.type == "Bool";
+    return retval;
+}
+
+// Added by WV
+tutorial12.pages.isList = function(result) {
+  var retval = /\[\w+\]/.test( result.type ) 
+    return retval;
+}
+
 // All pages
 tutorial12.pages.list =
     [
@@ -60,14 +72,15 @@ tutorial12.pages.list =
          '<h3>Tutorial 1.2: The Essentials: Functions and Lists</h3>' +
          '<p>This tutorial will guide you through two essential concepts of the Haskell language: functions and lists. \
          You will learn the syntax, how to create and use functions and lists.</p>'+
-         '<p>Type <code>step3</code> at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
+         '<p>Type <code>next</code> at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
-         '<p>This tutorial has XX sections:</p>'+
+         '<p>This tutorial has five sections:</p>'+
          '<ol>'+
          '<li>Defining a Function (<code>step3</code>)</li>'+
-         '<li>Functions without a Name: Lambda Functions(<code>step5</code>)</li>'+
-         '<li>Lists (<code>step12</code>)</li>'+
-         '<li>XX (<code>step19</code>)</li>'+
+         '<li>Functions without a name: lambda functions(<code>step5</code>)</li>'+
+         '<li>A key datastructure: the list (<code>step12</code>)</li>'+
+         '<li>Constructing lists (<code>step17</code>)</li>'+
+         '<li>Manipulating lists (<code>step25</code>)</li>'+
          '</ol>'
 //         +'</div>'
         },
@@ -89,12 +102,11 @@ tutorial12.pages.list =
         	 	'<code>f x = x+1</code></p>'+
 
         	 	'<p>The left hand side (lhs) of the equation looks like a variable – and that’s what it is! '+
-        	 	'The right hand side (rhs) is an expression that uses the local variable and defines the result of the expression.</p>'+
-        	 	"<p>If you enter the equation above or a similar one, you'll see it does indeed return an expression.</p>"
+        	 	'The right hand side (rhs) is an expression that uses the local variable and defines the result of the expression.</p>'        	 	
         },
         {
           trigger:function(result){
-              return /Expr/.test(result.type);
+              return true;// /Expr/.test(result.type);
           }, 
           guide:function(result){
         	 	return '<p>To use the function, you apply it to an argument, e.g.'+
@@ -114,7 +126,7 @@ tutorial12.pages.list =
         },   
         {
         trigger:function(result){
-            return /Expr/.test(result.type);
+            return true;// /Expr/.test(result.type);
         }, 
         guide:function(result){
       	 	return '<p>To use it, e.g. <code>10 + 4* add3nums 1 2 3</code>.</p>'   ;
@@ -124,10 +136,10 @@ tutorial12.pages.list =
         // Lambda Functions
 
         {lesson:2,
-         title:'Lambda Functions',
+         title:'Lambda functions',
          trigger:tutorial12.pages.isNum,
           guide:function(result){
-        	  return '<h3>Functions without a Name: Lambda Functions</h3>'+
+        	  return '<h3>Functions without a name: lambda functions</h3>'+
         	'<p>You can also define a function without a name, known as a "lambda function" (or "anonymous function" in other languages),'+
         	'for example <code>\\x -> x+1</code>.</p>'+
         	'<p>On the lhs of the arrow you list the arguments, on the rhs the expression.</p>'+
@@ -148,357 +160,341 @@ tutorial12.pages.list =
         },        
         
         
-        // Expression Syntax - cont'd
+        // Lambda Functions- cont'd
         {
           trigger:function(result){
               return /Expr/.test(result.type);
           }, 
           guide:function(result){
-        	  return "<p>In that way you can use it later: <code>fl 4</code>.</p>"+
-        	  "<p>You can of course also define lambda functions with multiple arguments, e.g. "+
+        	  return "<p>In that way you can use it later: <code>fl 4</code>.</p>";
+        	           	     
+          }
+        },
+
+        // Lambda Functions - cont'd
+        {
+        	trigger:tutorial12.pages.isNum,
+          guide:function(result){
+        	  return "<p>You can of course also define lambda functions with multiple arguments, e.g. "+
         	  "<code>add3numsl = \\x y z -> x + y + z</code>"+
         	  "<p>You can use this function in exactly the same way as a named function, e.g. <code>10 + 4* add3numsl 1 2 3</code>.</p>";   
           }
         },
-
+        
         // Expression Syntax - Corner cases 1
         {lesson:3,
         	title:'Lists',
         	trigger:tutorial12.pages.isNum,
+          guide:function(result){
+        	  return "<h3>A key datastructure: the list</h3>"+
+        	  "<p>A list is a single value that contains several other values. The elements are written in square parentheses, separated by commas, e.g."+
+        	  '<code>[2.718, 50.0, -1.0]</code> or <code>[1,2,4,8]</code> or <code>["A","list","of","strings"]</code>.</p>';
+        }
+        },
+        {
+        
+        	trigger:tutorial12.pages.isList,
           guide:function(result){
         	  return "<h3>Lists</h3>"+
         	  "<p>A list is a single value that contains several other values. The elements are written in square parentheses, separated by commas, e.g."+
         	  '<code>[2.718, 50.0, -1.0]</code> or <code>[1,2,4,8]</code> or <code>["A","list","of","strings"]</code>.</p>';
         }
         },
-
-        // Expression Syntax - Corner cases 2
         {
-          trigger:function(result){
-              return /\[\w+\]/.test(result.type);
-          },
+    	trigger:tutorial12.pages.isList,
+        guide:function(result){
+      	  return '<p>To get the length of a list you can use the <tt>length</tt> function: <code>length ["A","list","of","strings"]</code>.</p>';
+      }
+      },        
+
+        // Function returning several results
+        {
+          trigger:tutorial12.pages.isNum,
           guide:function(result){
-        	  return "<h3>Function returning several results</h3>"+
+        	  return "<h4>Functions returning lists</h4>"+
               '<p>Actually, a function can return only one result.</p>'+
               '<p>However, lists allow you to package up several values into one object, which can be returned by a function.'+
-              'Here is a function <tt>minmax</tt> that returns both the smaller and the larger of two numbers:</p>'+
-              '<p><code>minmax = \\x y -> [min x y, max x y]</code></p>'+
-              '<p>(You can ignore the error message)</p>'+
-              '<p>So, for example <code>minmax 3 8</code> and <code>minmax 8 3</code> both return the list [3,8].</p>';
+              'Here is a function <tt>sumprod</tt> that returns both the sum and the product of two numbers:</p>'+
+              '<p><code>sumprod = \\x y -> [x+y,x*y]</code></p>'+
+              
+              '<p>So, for example <code>sumprod 3 8</code> and <code>sumprod 8 3</code> both return the list [11,24].</p>';
         }
         },
 
-        // Expression Syntax - Corner cases 3
+        // 
         {
           trigger:function(result){
-            // This is triggered on the previous expression
-        	  //*** Here check if they did run that function and return the result, if they didn't just carry on
-        	  return /\[\w+\]/.test(result.type);
+        	  return tutorial12.pages.isList(result) && !/Expr/.test(result.type);
+          },
+          
+          guide:function(result){
+        	  return "<h4>Naming lists</h4><p>A constant list such as <tt>[2,4,6,8]</tt> is a valid expression so you can assign it to a variable, e.g."+
+        	  '<code>mylist = [2,4,6,8]</code></p>'+"<p>Now you can refer to this list by its name anywhere in the program</p>";
+        	  
+        }
+        },
+        // 
+        {
+          trigger:function(result){
+        	  return tutorial12.pages.isList(result) && /mylist/.test(result.expr);
           },
           guide:function(result){
-        	  return "<p>You can write a constant list, e.g. <code>[2,4,6,8]</code>, and as this is a valid expression you can assign it to a variable, e.g."+
-        	  '<code>mylist = [2,4,6,8]</code></p>'+
-        	  '<p>But the elements of a list can also be expressions, which are evaluated when they are accessed. Suppose you define:</p>'+
+//        	  alert(result.expr);
+        	  return  '<p>The elements of a list can also be expressions, which are evaluated when they are accessed. Suppose you define:</p>'+
         	  '<p><code>answer = 42</code></p>'+
         	  "<p><code>yourlist = [7, answer+1, 7*8]</code></p>";
         }
         },
 
-        // Expression Syntax - Corner case 4
+        // 
         {
-          trigger:function(result){
-          
-          //*** Here need to check that they actually did something like that, if they did return the result
-        	  return /\[\w+\]/.test(result.type);
-          },
-          
+        	trigger:tutorial12.pages.isList,
           guide:function(result){
-        	  return "<p>Then when you evalue <code>yourlist</code> you get <code>"+result.value+"</code>.</p>";
+        	  return "<p>Then when you evalue <code>yourlist</code> you get <tt>"+result.value+"</tt>.</p>";
        }
 
 
         },
 
-// Functions
-        {lesson:3,
-         title:'Functions',
+// Constructing lists
+        {lesson:4,
+         title:'Constructing lists',
          trigger:function(result){
                return true;
          },
 
           guide:function(result){
-          if (!result) result = {expr:'4+-3',value:1};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /[0-9]+\+\-[0-9]+/.test(rexpr);
-          var next_step = "<h3>Functions</h3>"
-          +"<p>A function has a textual name (e.g. 'abs' or 'sin') rather than an operator.</p><p>It takes argument(s), performs some computation, and produces result(s).</p><p>To use a function in Haskell, you apply it to an argument: write the function followed by the argument, separated by a space.</p><p>For example try <code>abs 7</code>.";
+          var next_step = "<h3>Constructing lists</h3>" 
+          + "<p>Apart from explicitly writing the list expression, there are several other ways to construct lists</p>"
+          	+	"<h4>Adding an element to a list: the (:) operator</h4>"
+          +'<p>The <tt>(:)</tt> ("cons") operator takes a scalar and an existing lists, and returns a new list containing all the elements. </p>'+"<p>For example, <code>23 : [48, 41, 44]</code></p>";
               return next_step;
        }
 
         },
-
-// Functions (2)
         {
-          // We carry on if they typed a function and it evaluated to something numerical
-          trigger:function(result){
-                     var retval = tutorial12.pages.isNum(result);
-                     var retexpr = /^\s*\w+\s+/.test(result.expr);
-                     return retval && retexpr;
-                },
-          guide:function(result){
-          if (!result) result = {expr:'abs 7',value:7};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /abs\s+[0-9]+/.test(rexpr);
-          var msg = "";
-          if (valid) {
-            msg = "<p>As expected, applying abs to a positive number just returns its value</p>";
-          } else  {
-            msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-          }
-          return msg+"<p>Now let's try a negative number: <code>abs (-3)</code>.</p>";
-       },
-
-        },
-
-
-        // Functions (3)
-        {
-          trigger:function(result){
-            var retval = tutorial12.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'abs -3',value:3};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /abs\s+\(\s*\-[0-9]+\s*\)/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>And indeed, applying abs to a negative number returns the absolute value</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+
-            "<p>Functions can take several arguments, e.g. min and max take two arguments. The arguments are given after the function,  separated by whitespace.</p><p>For example, <code>min 3 8</code> or <code>max 3 8</code>.</p>";
-        }
-        },
-
-        // Functions (4)
-        {
-          trigger:function(result){
-            var retval = tutorial12.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'abs -3',value:3};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /\w+(\s+[\(\)\-0-9]+)+/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>See? No need for parentheses!</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+'<p>'+
-            "To combine functions you need to know their precedence. In Haskel this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
-            +'</p>';
-        }
-        },
-
-        // Functions (5)
-        {
-          trigger:function(result){
-            var retval = tutorial12.pages.isNum(result);
-            var retexpr = /^\s*\w+\s+/.test(result.expr);
-            return retval && retexpr;
-          },
-          guide:function(result){
-            if (!result) result = {expr:'sqrt 9+7',value:10.0};
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /sqrt\s+\d+\s*[\+\-\*]\s*\d+/.test(rexpr);
-            var msg = "";
-            if (valid) {
-              msg = "<p>Surprised? Haskell interprets this as <code>(sqrt 9)+7</code>, not <code>sqrt (9+7)</code>.</p>";
-            } else  {
-              msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-            }
-            return msg+'<p>'+
-            "So now try <code>sqrt (9+7)</code>."
-            +'</p>';
-        }
-      },
-
-      // Functions (6)
-      {
-        trigger:function(result){
-          var retval = tutorial12.pages.isNum(result);
-          var retexpr = /^\s*\w+\s+/.test(result.expr);
-          return retval && retexpr;
-        },
+            // Cons (2)
+            trigger:tutorial12.pages.isList,
         guide:function(result){
-          if (!result) result = {expr:'sqrt (9+7)',value:4.0};
-          var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-          var valid = /sqrt\s+\(\s*\d+\s*[\+\-\*]\s*\d+\s*\)/.test(rexpr);
-          var msg = "";
-          if (valid) {
-            msg = "<p>That worked as expected!</p>"+
-            "<p>So if an argument to a function is an expression, you need to put it in parentheses.</p>";
-          } else  {
-            msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
-          }
-          tutorial12.continueOnError=true;
-          return msg+'<p>'+
-          "So what about combining two functions? Try for example to apply 'min' to 'max 3 4' and '5'."
-          +'</p>';
-      }
-    },
+            var next_step = 
+             "<p>You can use this operator to turn a scalar into a list:</p>"
+            		
+            +"<code>42 : []</code> is the same as <code>[42]</code></p><p>The cons operator is usually used in a recursive fashion, as we will see later.</p>";
+                return next_step;
+         }
 
-    // Functions (7)
+          },        
+
+        {
+            // Append (1)
+            trigger:tutorial12.pages.isList,
+            guide:function(result){
+                var next_step = 
+                		"<h4>Joining lists: the (++) operator</h4>"
+                +'<p>The <tt>(++)</tt> ("append") operator takes two existing lists, and gives you a new one containing all the elements. </p>'+"<p>For example, <code>[23, 29] ++ [48, 41, 44]</code></p>";
+                    return next_step;
+             }
+        },
+        {
+          // Append (2)
+          trigger:tutorial12.pages.isList,
+          guide:function(result){
+
+var next_step="<p>You can verifiy that the length of the joint list is always the sum of the lengths of the original lists:</p><p><code>length [23, 29] + length [48, 41, 44] == length ([23, 29] ++ [48, 41, 44])</code></p>";
+return next_step;
+                },
+        },
+
+
+        // Sequences (1)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isBool(result);
+            return retval ;
+          },
+          guide:function(result){
+            var next_step="<h4>Sequences</h4>"
+            +"<p>Sometimes it’s useful to have a sequence of numbers. "
+            +"In standard mathematical notation, you can write 0,1,…,n.</p>"
+            +"<p>In Haskell you can use the sequence notation for lists, e.g. <code>[0 .. 5]</code> or <code>[100 .. 105]</code> or <code>[2,4 .. 16]</code>.</p>";
+            return next_step;
+        }
+        },
+        // Sequences (2)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+            var next_step="<p>Sequences are not limited to integers: you can write <code>[1.1,1.2 .. 2.0]</code> or even <code>[0x0A .. 0x1F]</code>";            
+            return next_step;
+        }
+        },
+
+        // Sequences (3)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+            var next_step="<p>They are not even limited to numbers: <code>['a','d' .. 'z']</code> works as well!</p>";            
+            return next_step;
+        }
+        },
+
+        // List comprehensions (1)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+             var next_step="<h3>List comprehensions</h3>"
+                 +"<p>Sequences are fine, but sometimes you need more expressive power. A list comprehension is a high level notation for specifying the computation of a list. It is inspired by the mathematical notation for set comprehension.</p>"
++"<p>Let's look at a simple examples of list comprehension:</p>"
++"<p><code>[3*x | x <- [1..10]]</code></p>"+"<p>As you can see, to the left of the bar <tt>|</tt> we have an expression that is computed for every element of the list to the right. The parameter in the expression is specified using the left arrow <tt>&lt;-</tt></p>";
+                 
+            return next_step;
+        }
+        },
+         // List comprehensions (2)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+             var next_step= 
+"<p>Another example: <code>  [2*x+1 | x <- [0,2..10]]</code></p>"
++"<p>The list can be defined in any of the previous ways, as a constant, variable or sequence</p>";                 
+            return next_step;
+        }
+        },
+
+ // List comprehensions (4)
+        {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+             var next_step="<p>You can also specify multiple list to create a single new list, for example:</p><p><code>  [[a,b] | a <- [10,11,12] , b <- [20,21]]</code></p>";
+                 
+            return next_step;
+        }
+        },
+
+// Operating on lists
+          {lesson:5,
+            title:'Manipulating lists',
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+             var next_step="<h3>Manipulating lists</h3>" 
+             +"<p>Haskell provides many ways to operate on lists. Remember that the original list is never modified!</p>"
+             		+"<h4>Indexing</h4>"
+                 +"<p>Haskell lists are indexed starting with 0. The <tt>(!!)</tt> operator takes a list and an index, and returns the corresponding element:"
+                 +"<p><code>[5,3,8,7]  !! 2</code> returns 8; <code>[0 .. 100]  !! 81</code>  returns 81.</p>";
+                 
+            return next_step;
+        }
+        },
+
+// Operating on lists
+          {
+          trigger:tutorial12.pages.isNum,
+          guide:function(result){
+        	  tutorial12.continueOnError=true;
+             var next_step="<p>If the index is negative or too large, and exception is returned:</p>"
+                 +"<p><code>['a'..'z'] !! 33</code></p>"; // TODO: check what this does!          
+            return next_step;
+        }
+        },
+// head and tail
+
+ {
+            trigger:function(result){
+            	alert(result.error);
+                return /index\ too\ large/.test(result.error);
+            },
+          guide:function(result){
+        	  tutorial12.continueOnError=false;
+var next_step="<h3><tt>head</tt> and <tt>tail</tt></h3>"
++"<p>There are standard library functions to give the head of a list (its first element) or the tail (all the rest of the list): <code>head [4,5,6]</code> returns <tt>4</tt>.</p>";
+ return next_step;
+        }
+        },
+ {
+          trigger:tutorial12.pages.isNum,
+          guide:function(result){
+
+ var next_step="<p>And <code>tail [4,5,6]</code> returns <tt>[5,6]</tt></p>";
+ return next_step;
+        }
+        },
+ {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return retval ;
+          },
+          guide:function(result){
+        	  tutorial12.continueOnError=true;
+ var next_step="<p>What happens if you try to take the head of an empty list? <code>head [] :: Int</code></p>";
+ return next_step;
+        }
+        },
+ {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return true;//retval ;
+          },
+          guide:function(result){
+        	  tutorial12.continueOnError=true;
+ var next_step="<p>As expected, you get an exception.</p>"
++"<p>And what if you try to take the tail of an empty list? <code>tail [] :: [Int]</code></p>";
+ return next_step;
+        }
+        },
+ {
+          trigger:function(result){
+            var retval = tutorial12.pages.isList(result);
+            return true;//retval ;
+          },
+          guide:function(result){
+        	  tutorial12.continueOnError=false;
+ var next_step="<p>Again an exception is raised.</p>" +
+ 		"<p>In the expressions above we used <tt>:: Int</tt> and <tt>:: [Int]</tt>, these are examples of Haskell types, which will also be introduced in the next lessons; we used them because the browser-based system needs this information to print the exception.</p>" 
+ 		+"<p>For robust programming, we need to ensure either that all expressions are well defined, or else that all exceptions are caught and handled.</p>"
+	 +"<p>In the next lessons you will be introduced to more predefined list manipulation functions and learn how to write your own functions for working with lists.</p>"
+	   
+	 +"<p>Please type <code>next</code> to continue to the recap page.</p>";
+ return next_step;
+        }
+        },
+                    
     {
-      trigger:function(result){
-    	  var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-    	  alert(rexpr);
-        // This can generate an error, we should test here against the actual expressions not the results
-var retval = /m(in|ax)\s+\d+\s+m(in|ax)\s+\d+\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+m(in|ax)\s+\d+\s+\d+\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+\(\s*m(in|ax)\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr) ||
-/m(in|ax)\s+\d+\s+\(\s*m(in|ax)\s+\d+\s+\d+\s*\)/.test(rexpr);
-        return retval;
-      },
-      guide:function(result){
-    	  var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-var msg="";
-                if (/min\s+\d+\s+max\s+\d+\s+\d+/.test(rexpr)) {
-msg = "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments.  You need parentheses around the inner function call, e.g. <code>min 5 (max 3 4)</code>.";
-                } else if (/min\s+max\s+\d+\s+\d+\s+\d+/.test(rexpr) ) {
-                    msg ="That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments. You need parentheses around the inner function call, e.g. <code>min (max 3 4) 5</code>.";
-                } else if (/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
-                } else if (/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
-                } else {
-                    // should not happen!
-                }
-        return msg+'<p>'+
-        "type <code>next</code> to continue to the next section"
-        +'</p>';
-    }
-  },
-// Equations
-{lesson:4,
- title:'Equations',
- trigger:function(result){
-       return true;
- },
- guide:function(result){
+    	  trigger:function(result){
+    	    return true;
+    	  },
+    	  guide:function(result){
+    		  
+    	    var msg="<h3>And that's the end of Tutorial 1.2!</h3>" +
+    	    		"<p>Well done, another Haskell tutorial finished!.</p>" +
+    	    		"<p>Let's recap what we've learned:</p>" +
+    	            '<ol>'+
+    	            '<li>Defining a function: a function defines an expression with variables</li>'+	            
+    	            "<li>Lambda functions: functions don't need a name</li>"+
+    	            '<li>The list datastructure: the key datastructure in Haskell</li>'+
+    	            '<li>Constructing lists: the (:) and (++) operators, sequences, comprehensions</li>'+
+    	            '<li>Manipulating lists: indexing, head and tail</li>'+
+    	            '</ol>';
 
-
-var msg="<h3>Equations</h3>"
-+"<p>Equations are used to give names to values, e.g. <code>answer = 42</code>.</p>";
-return msg;
-}
-},
-
-{
-  trigger:function(result){
-    // alert(result.expr);
-    var retval = /\w+\s*=[^=><]/.test(result.expr);
-    // alert(retval);
-    return retval;
-  },
-  guide:function(result){
-    // So here we know it was an assignment
-    var msg="<p>OK, you've defined an equation, now let's use it. Just type <code>answer</code>.</p>";
-    return msg;
-  }
-},
-
-{
-  trigger:function(result){
-    return true;
-  },
-  guide:function(result){
-    var msg= "<p>Equations give names to values. So now 'answer' is just another name for '42'</p>"
-    +"<p>An equation in Haskell is a mathematical equation: it says\
-      that the left hand side and the right hand side denote the same\
-      value.</p>\
-    <p>The left hand side should be a name that you're giving a\
-      value to.</p>\
-      <p>So now you can say <code>double = answer * 2</code>.</p>";
-      return msg;
-  }
-},
-
-{
-  trigger:function(result){
-    var retval = /\w+\s*=\s*\w+\s*[\*\+\-\/]\s*\d+/.test(result.expr);
-    return retval;
-  },
-  guide:function(result){
-    var msg="But you can't say <code>answer = answer * 2</code>!";
-    tutorial12.continueOnError=true;
-    return msg;
-  }
-},
-{
-  trigger:function(result){
-    if(result.error && /Evaluation killed/.test(result.error)) {
-        // remove the last element from tutorial12.equations!
-        var drop = tutorial12.equations.pop();
-//        alert(tutorial12.equations);
-//        alert(drop);
-    }
-    return true;
-  },
-  guide:function(result){
-    var msg="<p>If you tried it, you got an error message 'Evaluation killed!'</p>\
-    <p>In a pure functional language like Haskell, you can't define a name in terms of itself.</p>\
-    <p>And furthermore, you can only assign a name once!</p>\
-    <p>For example, try <code>answer = 43</code>.</p>";
-    tutorial12.continueOnError=true;
-    return msg;
-  }
-},
-{
-  trigger:function(result){
-    if(result.error && /Conflicting/.test(result.error)) {
-        // remove the last element from tutorial12.equations!
-        var drop = tutorial12.equations.pop();
-//        alert(tutorial12.equations);
-//        alert(drop);
-    }
-    return true;
-  },
-  guide:function(result){
-	  if(/Conflicting/.test(result.error)) {
-    var msg="<p>As you can see, you get an error 'Conflicting assignments'</p>" +
-    		"<p>Reassignment is not allowed, variables are what is called 'immutable'.</p>" +
-    		"<p>This is a very important property because it means that you can always, anywhere in a program, replace a variable with its corresponding expression.</p>" +
-    		"<p>Please type <code>next</code> to continue to the recap page.</p>";
-    return msg;
-	  } else {
-		  
-	  }
-  },
-},
-{
-	  trigger:function(result){
-	    return true;
-	  },
-	  guide:function(result){
-		  
-	    var msg="<h3>And that's the end of Tutorial 1!</h3>" +
-	    		"<p>Well done, you finished your first Haskell tutorial!.</p>" +
-	    		"<p>Let's recap what we've learned:</p>" +
-	            '<ol>'+
-	            '<li>Expressions: evaluate mathematical expressions, operators, rules of precedence and role of parenthese, infix and prefix operations.</li>'+	            
-	            '<li>Functions: calling existing functions, combining them and including them in expressions.</li>'+
-	            '<li>Equations: naming expressions using assignments, immutable variables.</li>'+
-	            '</ol>';
-
-	    return msg;
-	  },
-	},
+    	    return msg;
+    	  },
+    	},        
 
     ];
