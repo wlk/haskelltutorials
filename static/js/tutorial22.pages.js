@@ -1,26 +1,26 @@
 
 // Module for the guide pages
-tutorial2.pages = {};
+tutorial22.pages = {};
 
 // Unshow a string
-tutorial2.pages.unString = function(str){
+tutorial22.pages.unString = function(str){
     return str.replace(/^"(.*)"$/,"$1").replace(/\\"/,'"');
 }
 
 // Random message from a list of messages
-tutorial2.pages.rmsg = function(choices) {
+tutorial22.pages.rmsg = function(choices) {
     return choices[Math.floor((Math.random()*100) % choices.length)];
 }
 
 // Simple HTML encoding
-tutorial2.pages.htmlEncode = function(text,shy){
+tutorial22.pages.htmlEncode = function(text,shy){
     var x = $('<div></div>');
     x.text(text);
     return x.html();
 }
 
 // Added by WV
-tutorial2.pages.isNum = function(result) {
+tutorial22.pages.isNum = function(result) {
   var retval =
     /(Num|Fractional|Integral|Floating)\s+[a-z]+\s+=>\s+[a-z]+/.test( result.type ) ||
     /\(Ord\s+[a-z]+\s*,\s*(Num|Fractional|Integral|Floating)\s+[a-z]+\)\s+=>\s+[a-z]+/.test( result.type ) ||
@@ -31,7 +31,7 @@ tutorial2.pages.isNum = function(result) {
     return retval;
 }
 
-tutorial2.pages.isBool = function(result) {
+tutorial22.pages.isBool = function(result) {
     return (result.type == "Bool");
 }
 
@@ -40,14 +40,14 @@ tutorial2.pages.isBool = function(result) {
 
 
 // All pages
-tutorial2.pages.list =
+tutorial22.pages.list =
     [
       {title:'Haskell Interactive Tutorials',
        guide:
        '<div class="indent">' +
        '<h3>Haskell Interactive Tutorials</h3>' +
        //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 2 it is <a href="'+tutorial2.url+'">'+tutorial2.url+'</a>.</p>'+
+       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 2 it is <a href="'+tutorial22.url+'">'+tutorial22.url+'</a>.</p>'+
        '<br>'+
        '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
        '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
@@ -62,80 +62,81 @@ tutorial2.pages.list =
 
        '</div>'
       },
-        {title:'Tutorial 2: Boolean Values and Expressions',
+        {title:'Tutorial 2.2: More Boolean Operations',
          guide:
          '<div class="indent">' +
-         '<h3>Tutorial 2: Boolean Values and Expressions</h3>' +
-         '<p>Let\'s get some more experience with Boolean values and expressions.</p>'+
+         '<h3>Tutorial 2.2: More Boolean Operations</h3>' +
+         '<p>We are going to look at some more boolean operations today.</p>'+
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
          '</div>'
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
 
-        // Simple integer arithmetic
+        // Simple boolean operators
         {lesson:1,
-         title:'Boolean Expressions',
+         title:'Boolean Negation',
          guide:
-         '<h3>Boolean Equality</h3>'
-         + "<p>Like many other languages, the double-equals operator == is used for testing value equality. "
-         +"<p>Type an integer equality test, e.g. <code>42==42</code>,  and observe that it evaluates to True.</p>"
+         '<h3>Boolean Negation</h3>'
+         + "<p>Boolean values are either True or False. True is the opposite of False, and vice verse. The not function returns the opposite boolean value, the logical complement. Try <code>not True</code></p>"
         },
         {
-          trigger:tutorial2.pages.isBool, 
+          trigger:tutorial22.pages.isBool, 
           guide:function(result){
-            if (!result) result = {expr:'42==42',value:'True'};
+            if (!result) result = {expr:'not True',value:'False'};
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var complied = /True/.test(result.value);            
+            var complied = /False/.test(result.value);            
             var valid = /True|False/.test(result.value);
-            var next_step = "<p>Now compare two different integer values for equality, e.g. <code>1 == 2</code>, and observe that the result is False.</p>";
+
+	    var msg = "";
             if (valid) {
               if (complied) {
-                return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
+                msg = "<p>You got back the boolean value "+result.value+" as expected.</p>";
               } else {
-                return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
+		var trimmedExpr = result.expr.replace(/^let\s.+\sin\s+/, "");
+                msg = '<p>OK, you calculated <code>' + trimmedExpr +'</code>,so you got back the truth value '+result.value+' as you would expect.</p>';
               }
             } else {
-                return '<p>'+
-                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
-                    +'</p>'+next_step;
+                msg = '<p>'+
+                    "What you typed does not seem to be a simple boolean operation but it did something sensible!"
+                    +'</p>';
 		
             }
+            tutorial22.continueOnError = true;
+	    var next_step = "<p>Now perform a double negation, e.g. <code> not (not False)</code> and observe that the final result is the same as the initial value.</p>";
+	      return msg + next_step;
+
           }
 
         },
-        // Compare for inequality now
+        // && and ||
         {lesson:2,
-         title:'The not-equals operator',
-         trigger:tutorial2.pages.isBool,
-           guide:function(result){
-            if (!result) result = {expr:'1==2',value:'False'};
-            var complied = /False/.test(result.value);            
-            var valid = /True|False/.test(result.value);
-            var next_step =
-            "<h3>The not-equals operator</h3>"
-            +"<p>Use the /= operator (it's supposed to look like an equals sign with a line through it), to test for inequality, "
-            +"e.g. <code>1 /= 2</code>. </p>";
-            if (valid) {
-		if (complied) {
-                    return "<p>OK, no surprises so far, you got back the truth value "+result.value+" as expected.</p>"+next_step;
-		} else {
-                    return "<p>OK, you compared two values that are not equal, so you got back the truth value "+result.value+" as you would expect.</p>"+next_step;
-		}
-            } else {
-                return '<p>'+
-                    "What you typed does not seem to be a simple integer arithmetic expression, but it did something sensible!"
-                    +'</p>'+next_step;
-		
-            }
-           }
+         title:'Boolean And',
+         trigger:function(result){
+	   bracketError = /applied\s+to\s+two\s+arguments/.test(result.error);
+	   booleanResult = result.type == "Bool";
+           return bracketError || booleanResult;
+	 },
+         guide:function(result){
+           var msg = "";
+	   if (/applied\s+to\s+two\s+arguments/.test(result.error)) {
+	       msg = msg + "<p>Remember to use brackets round the innermost not function call, since this must be evaluated first: <code>not (not True)</code></p>."
+	   }
+           var next_step =
+            "<h3>The And operator</h3>"
+            +"<p>Use the && infix operator as a boolean And. This only evaluates to True when both its inputs are True."
+            +"e.g. <code>True && True</code>. </p>";
+	   return msg + next_step;
+	 }
         },
+
+   // FIXME - need a custom trigger to check we did an AND
         
         // Expression Syntax - cont'd
         {
-         trigger:tutorial2.pages.isBool,
+         trigger:tutorial22.pages.isBool,
           guide:function(result){
-	      tutorial2.continueOnError = true;
+	      tutorial22.continueOnError = true;
             return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\" == \"hola\"</code>.</p>";
           }
         },
@@ -156,13 +157,13 @@ tutorial2.pages.list =
 	     if (/lexical\s+error\s+in\s+string/.test(result.error)) {
 		 msg = "<p>Did you forget a double quote \" at the beginning or end of one of your strings?"
 	     }
-             tutorial2.continueOnError = false;
+             tutorial22.continueOnError = false;
              return   msg + "<p> Now try String inequality <code>\"foo\" /= \"bar\"</code></p>";
          }
         },
 
         {
-         trigger:tutorial2.pages.isBool,
+         trigger:tutorial22.pages.isBool,
           guide:function(result){
             return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True /= False</code>.</p>";
           }
@@ -172,7 +173,7 @@ tutorial2.pages.list =
         
         // Expression Syntax - cont'd
         {
-          trigger:tutorial2.pages.isBool,
+          trigger:tutorial22.pages.isBool,
           guide:function(result){
             if (!result) result = {expr:'True/=False',value:'True'};
             var complied = /Bool/.test(result.type);            
@@ -185,7 +186,7 @@ tutorial2.pages.list =
             } 
             var next_step =
 		  "<p>Now, what happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
-	      tutorial2.continueOnError = true;
+	      tutorial22.continueOnError = true;
             return msg+next_step;
           }
         },
@@ -199,7 +200,7 @@ tutorial2.pages.list =
               return typeError;
           },
           guide:function(result){
-          tutorial2.continueOnError = false;
+          tutorial22.continueOnError = false;
           return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types <em>limit</em> the operations we can apply to particular values.</p>" +
 		  "<p>Haskell supports the standard comparison/relational operators, <, <=, >, >=. Try a simple comparison, e.g. <code>10 &gt; 9</p>";
         }
@@ -207,14 +208,14 @@ tutorial2.pages.list =
 
         // Expression Syntax - Corner cases 3
         {
-          trigger:tutorial2.pages.isBool,
+          trigger:tutorial22.pages.isBool,
           guide:function(result){
           return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4]</p>";
         }
         },
 
 	{
-	  trigger:tutorial2.pages.isBool,
+	  trigger:tutorial22.pages.isBool,
 	  guide:function(result) {
 	    return "<p> Since strings are lists of characters in Haskell, we can do the same kinds of comparison operations on strings. Check whether Aadvark comes before Aaronic in the dictionary with this code: <code>&quot;Aardvark&quot; &lt; &quot;Aaronic&quot;";
 	  }
@@ -223,16 +224,16 @@ tutorial2.pages.list =
 // about Eq class?
 
         {
-          trigger:tutorial2.pages.isBool,
+          trigger:tutorial22.pages.isBool,
           guide:function(result){
-          tutorial2.continueOnError = false;
+          tutorial22.continueOnError = false;
           var next_step = "<p>Now let's think about list membership. We want a boolean function that returns true if a value is part of a list, and false otherwise. This is the elem function. Try <code>elem 1 [1,2,3]</code></p>";
               return next_step;
 	}
         },
 
 	{
-	  trigger:tutorial2.pages.isBool,
+	  trigger:tutorial22.pages.isBool,
 	  guide:function(result){
             if (!result) result = {expr:'elem 1 [1,2,3]',value:'True'};
             var complied = /Bool/.test(result.type);            
@@ -247,7 +248,7 @@ tutorial2.pages.list =
 	}
 	},
 	{
-	  trigger:tutorial2.pages.isBool,
+	  trigger:tutorial22.pages.isBool,
 	  guide:function(result){
 	      var next_step ="<p>In fact, Haskell permits any two-argument function to be written as an infix operator using backquote characters. For a further example, try the max function as an infix operator: <code>42 `max` 13</code>";
 	      return next_step;
@@ -255,7 +256,7 @@ tutorial2.pages.list =
         },
 
 	{
-	  trigger:tutorial2.pages.isNum,
+	  trigger:tutorial22.pages.isNum,
 	  guide:function(result){
 	      var next_step = "<p>Also note that any Haskell infix operator, e.g. +, can be written as a prefix operator by enclosing it in parentheses, like <code>(+) 1 1</code>";
 	      return next_step;

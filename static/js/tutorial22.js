@@ -1,59 +1,59 @@
 // WV: actually, this is entirely generic
 // Main tutorial2 module.
-tutorial2 = {};
-tutorial2.url=window.location.href;
-tutorial2.hostname = '127.0.0.1';
-tutorial2.port = '4001';
+tutorial22 = {};
+tutorial22.url=window.location.href;
+tutorial22.hostname = '127.0.0.1';
+tutorial22.port = '4001';
 
 // A success hook which can be bound and rebound or set as null.
-tutorial2.successHook = null;
+tutorial22.successHook = null;
 
 // The current page number.
-tutorial2.currentPage = null;
-tutorial2.nPages = null;
+tutorial22.currentPage = null;
+tutorial22.nPages = null;
 
 // Stdout state from the current IO evaluation.
-tutorial2.stdout = [];
+tutorial22.stdout = [];
 
 // Stdin state for the current IO evaluation.
-tutorial2.stdin = [];
+tutorial22.stdin = [];
 
 // IO expression.
-tutorial2.io = null;
+tutorial22.io = null;
 
 // WV extensions for HaskellMOOC
 // Allow continue on error
-tutorial2.continueOnError = false;
+tutorial22.continueOnError = false;
 // Handle context for equations
-tutorial2.equations=[];
-tutorial2.isEq = false;
-tutorial2.forget = function(varname) {
+tutorial22.equations=[];
+tutorial22.isEq = false;
+tutorial22.forget = function(varname) {
 //	alert('FORGET');
 	var remaining_eqs = [];
-         for (var i = 0; i <  tutorial2.equations.length; i++) {
-             var eq = tutorial2.equations[i];
+         for (var i = 0; i <  tutorial22.equations.length; i++) {
+             var eq = tutorial22.equations[i];
              var chunks = eq.split(/\s*=\s*/);
              var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
 //             alert('<'+lhs+'><'+varname+'>');
              varre = new RegExp('\\b'+varname+'\\b');
              if (!varre.test(lhs)) {
 //            	 alert('Pushing '+eq);
-            	 remaining_eqs.push(tutorial2.equations[i]);
+            	 remaining_eqs.push(tutorial22.equations[i]);
              }
          }
-         tutorial2.equations=remaining_eqs;
-//         alert(varname+" => "+tutorial2.equations);
+         tutorial22.equations=remaining_eqs;
+//         alert(varname+" => "+tutorial22.equations);
 }
 
-tutorial2.undo  = function() {
-    if (tutorial2.isEq) {
-     tutorial2.equations.pop();
+tutorial22.undo  = function() {
+    if (tutorial22.isEq) {
+     tutorial22.equations.pop();
     }
 }
 
 
 // Files in the file system.
-tutorial2.files = {
+tutorial22.files = {
     "/hello": "Hello, World!",
     "/files": "Your file system changes will stick around in your browser's local storage!",
     "/welcome": "Welcome to your mini filesystem! Try playing with this function: getDirectoryContents",
@@ -63,27 +63,27 @@ tutorial2.files = {
 try {
     if(typeof(Storage)!=="undefined")
     {
-        tutorial2.files = (localStorage.files && JSON.parse(localStorage.files))
-            || tutorial2.files;
+        tutorial22.files = (localStorage.files && JSON.parse(localStorage.files))
+            || tutorial22.files;
     };
-} catch (e){ tutorial2.files = {} }
+} catch (e){ tutorial22.files = {} }
 
-tutorial2.showWarnings = function() {
+tutorial22.showWarnings = function() {
     !navigator.cookieEnabled     && $("#cookie-warning").show();
     window['localStorage']==null && $("#storage-warning").show();
 }
 
 // A pre-command hook which can prevent the command from being run if
 // it returns true.
-tutorial2.preCommandHook = function(line,report){
-    var m, pages = tutorial2.pages.list;
-    tutorial2.nPages = pages.length;
-    tutorial2.isEq = false;
-    // if the line matches step{$n} then get page $n from  tutorial2.pages.list (i.e. pages)
+tutorial22.preCommandHook = function(line,report){
+    var m, pages = tutorial22.pages.list;
+    tutorial22.nPages = pages.length;
+    tutorial22.isEq = false;
+    // if the line matches step{$n} then get page $n from  tutorial22.pages.list (i.e. pages)
     if (m = line.trim().match(/^step([0-9]+)/)) {
         var n = m[1] * 1;
         if (n <= pages.length) {
-            tutorial2.setPage(n,null);
+            tutorial22.setPage(n,null);
             report();
             return [true,'True'];
         }
@@ -93,45 +93,45 @@ tutorial2.preCommandHook = function(line,report){
         var n = m[1] * 1;
         for (var i = 0; i < pages.length; i++) {
             if (pages[i].lesson == n) {
-                tutorial2.setPage(i,null);
+                tutorial22.setPage(i,null);
                 report();
                 return [true,'True'];
             }
         }
     } else if (line.trim() == 'next') {
-        if (tutorial2.currentPage < tutorial2.pages.list.length) {
-            tutorial2.setPage(tutorial2.currentPage + 1);
+        if (tutorial22.currentPage < tutorial22.pages.list.length) {
+            tutorial22.setPage(tutorial22.currentPage + 1);
         }
         report();
         return [true,'True'];
     } else if (line.trim() == 'back' || line.trim() == 'prev') {
-        if (tutorial2.currentPage > 1) {
-            tutorial2.setPage(tutorial2.currentPage - 1);
+        if (tutorial22.currentPage > 1) {
+            tutorial22.setPage(tutorial22.currentPage - 1);
         }
         report();
         return [true,'True'];
     } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial2.setPage(2,null);
+        tutorial22.setPage(2,null);
         report();
         return [true,'True'];
     } else if (/^undo/.test(line.trim()) ) {
-        tutorial2.undo();
+        tutorial22.undo();
         report();        
         return [true,'True'];
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
         var varname = chunks[1];
-        tutorial2.forget(varname);
+        tutorial22.forget(varname);
         report();
         return [true,'True'];
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
     	// This is an equation.     	
         var nline = line.trim();
-        tutorial2.isEq = true;
-        tutorial2.equations.push(nline);
+        tutorial22.isEq = true;
+        tutorial22.equations.push(nline);
         var context = '';
-        if (tutorial2.equations.length>0) {
-        	context = 'let {'+ tutorial2.equations.join(';') +' } in ';
+        if (tutorial22.equations.length>0) {
+        	context = 'let {'+ tutorial22.equations.join(';') +' } in ';
         }
          var chunks = nline.split(/\s+=\s+/);
          var lhs = chunks[0];
@@ -151,8 +151,8 @@ tutorial2.preCommandHook = function(line,report){
          var re = new RegExp('\\b'+lhs+'\\b');
          if (re.test(rhs)) {
 //        	 alert('Recursion!');
-             tutorial2.equations.pop();
-             tutorial2.isEq = false;
+             tutorial22.equations.pop();
+             tutorial22.isEq = false;
              line = 'let '+nline+' in '+lhs;
          } else {
              if (!isLambda) {
@@ -164,14 +164,14 @@ tutorial2.preCommandHook = function(line,report){
         return [false,line];
     } else {
         // OK, an expression that is not an equation
-        line = 'let {'+ tutorial2.equations.join(';') +' } in '+line.trim();
+        line = 'let {'+ tutorial22.equations.join(';') +' } in '+line.trim();
     }
     return [false,line];
 };
 
 // Make the console controller.
-tutorial2.makeController = function(){
-    tutorial2.controller = $('#console').console({
+tutorial22.makeController = function(){
+    tutorial22.controller = $('#console').console({
         promptLabel: 'λ ',
         commandValidate: function(line){
             if (line == "") return false;
@@ -179,16 +179,16 @@ tutorial2.makeController = function(){
         },
         commandHandle: function(line,report){
 //            alert(tutorial.io);
-            if(tutorial2.io === null){
-                var retval = tutorial2.preCommandHook(line,report);
+            if(tutorial22.io === null){
+                var retval = tutorial22.preCommandHook(line,report);
                 var ignoreCommand = retval[0];
                 var newLine = retval[1];
                 if(!ignoreCommand){
-                    tutorial2.ajaxCommand(newLine,report,[]);
+                    tutorial22.ajaxCommand(newLine,report,[]);
                 }
             } else {
-                tutorial2.stdin.push(line);
-                tutorial2.ajaxCommand(tutorial2.io,report,tutorial2.stdin);
+                tutorial22.stdin.push(line);
+                tutorial22.ajaxCommand(tutorial22.io,report,tutorial22.stdin);
             }
         },
         autofocus: true,
@@ -200,9 +200,9 @@ tutorial2.makeController = function(){
 };
 
 // Make an AJAX command to the server with the given line.
-tutorial2.ajaxCommand = function(line,report,stdin){
+tutorial22.ajaxCommand = function(line,report,stdin){
     var args = { 'exp': line,
-                 'args': JSON.stringify([stdin,tutorial2.files])
+                 'args': JSON.stringify([stdin,tutorial22.files])
                };
     $.ajax({
         url: '/eval',
@@ -212,27 +212,27 @@ tutorial2.ajaxCommand = function(line,report,stdin){
         success: function(result){
             if(result.stdout !== undefined){
  //               alert(result.stdout);
-                tutorial2.files = result.files;
+                tutorial22.files = result.files;
                 result = result.stdout;
-                tutorial2.io = line;
+                tutorial22.io = line;
                 var msgs = [];
                 if(result != null){
-                    for(var i = tutorial2.stdout.length; i < result.length; i++) {
+                    for(var i = tutorial22.stdout.length; i < result.length; i++) {
                         msgs.push({ msg: result[i], className: 'jquery-console-stdout' });
                     }
                 }
-                tutorial2.stdout = result;
-                tutorial2.controller.continuedPrompt = true;
+                tutorial22.stdout = result;
+                tutorial22.controller.continuedPrompt = true;
                 report(msgs);
-                tutorial2.controller.continuedPrompt = false;
+                tutorial22.controller.continuedPrompt = false;
             } else {
                 if(result.error !== undefined){
 // A type error goes here,
 // What I want is the option to carry on
                     result.expr = args.exp                    
-                    if (tutorial2.continueOnError) {
-                        if(tutorial2.successHook != null) {
-                            tutorial2.successHook(result);
+                    if (tutorial22.continueOnError) {
+                        if(tutorial22.successHook != null) {
+                            tutorial22.successHook(result);
                         }
                         report([{ msg: result.error || 'Unspecified error. Have you installed mueval?',
                               className:'jquery-console-stdout' }]);
@@ -244,65 +244,65 @@ tutorial2.ajaxCommand = function(line,report,stdin){
                     // So this is where we get when a computation just works
                     result = result.success;
                     var msgs = [];
-                    for(var i = tutorial2.stdout.length; i < result.stdout.length; i++) {
+                    for(var i = tutorial22.stdout.length; i < result.stdout.length; i++) {
                         msgs.push({ msg: result.stdout[i], className: 'jquery-console-stdout' });
                     }
-                    if(tutorial2.successHook != null) {
-                        tutorial2.successHook(result);
+                    if(tutorial22.successHook != null) {
+                        tutorial22.successHook(result);
                     }
                     if(result.type !== 'IO ()' && !result.value.match(/^</))
                         msgs.push({ msg: result.value, className: 'jquery-console-value' });
                     msgs.push({ msg: ':: ' + result.type, className: 'jquery-console-type' });
                     report(msgs);
-                    tutorial2.files = result.files;
+                    tutorial22.files = result.files;
                 }
-                if (tutorial2.continueOnError) {
+                if (tutorial22.continueOnError) {
  // nothing                        
                 } else {
-                    tutorial2.io = null;
-                    tutorial2.stdout = [];
-                    tutorial2.stdin = [];
+                    tutorial22.io = null;
+                    tutorial22.stdout = [];
+                    tutorial22.stdin = [];
                 }
             }
             if(typeof(Storage)!=="undefined")
             {
-                localStorage.files = JSON.stringify(tutorial2.files);
+                localStorage.files = JSON.stringify(tutorial22.files);
             }
         }
     });
 };
 
 // Make the guide on the rhs.
-tutorial2.makeGuide = function(){
+tutorial22.makeGuide = function(){
     var match = window.location.href.match(/#step([0-9]+)$/);
     if(match){
-        tutorial2.setPage(match[1]*1,null);
+        tutorial22.setPage(match[1]*1,null);
     } else {
-        tutorial2.setPage(1,null);
+        tutorial22.setPage(1,null);
     }
 };
 
 // Set the current page.
-tutorial2.setPage = function(n,result){
-    var page = tutorial2.pages.list[n-1];
+tutorial22.setPage = function(n,result){
+    var page = tutorial22.pages.list[n-1];
     if(page){
         // Update the current page content
         var guide = $('#guide');
-        var stepcounter = (tutorial2.currentPage != null) ? '<div style="color: grey; text-align:right">[step '+(tutorial2.currentPage+1)+'/'+tutorial2.nPages+']</div>' : '';
+        var stepcounter = (tutorial22.currentPage != null) ? '<div style="color: grey; text-align:right">[step '+(tutorial22.currentPage+1)+'/'+tutorial22.nPages+']</div>' : '';
         guide.html(stepcounter+(typeof page.guide == 'string'? page.guide : page.guide(result)));
-        tutorial2.makeGuidSamplesClickable();
+        tutorial22.makeGuidSamplesClickable();
         // Update the location anchor
-        if (tutorial2.currentPage != null)
-            window.location = '/tutorial2'+'/#step' + n;
-        tutorial2.currentPage = n;
+        if (tutorial22.currentPage != null)
+            window.location = '/tutorial22'+'/#step' + n;
+        tutorial22.currentPage = n;
         // Setup a hook for the next page
-        var nextPage = tutorial2.pages.list[n];
+        var nextPage = tutorial22.pages.list[n];
         
         if(nextPage) {
-            tutorial2.successHook = function(result){
+            tutorial22.successHook = function(result){
                 if (nextPage.trigger &&
                     nextPage.trigger(result))
-                    tutorial2.setPage(n+1,result);
+                    tutorial22.setPage(n+1,result);
             };
         }
     } else {
@@ -312,20 +312,20 @@ tutorial2.setPage = function(n,result){
 
 // Make the code examples in the guide clickable so that they're
 // inserted into the console.
-tutorial2.makeGuidSamplesClickable = function() {
+tutorial22.makeGuidSamplesClickable = function() {
     $('#guide code').each(function(){
         $(this).css('cursor','pointer');
         $(this).attr('title','Click me to insert "' +
                      $(this).text() + '" into the console.');
         $(this).click(function(){
-            tutorial2.controller.promptText($(this).text());
-            tutorial2.controller.inner.click();
+            tutorial22.controller.promptText($(this).text());
+            tutorial22.controller.inner.click();
         });
     });
 }
 
 // Display the currently active users
-tutorial2.activeUsers = function(){
+tutorial22.activeUsers = function(){
     var active = $('.active-users');
     // Tomorrow theme
     var colors =
@@ -378,8 +378,8 @@ String.prototype.trim = function() {
 
 // Main entry point.
 $(function(){
-    tutorial2.showWarnings();
-    tutorial2.makeController();
-    tutorial2.makeGuide();
-    tutorial2.activeUsers();
+    tutorial22.showWarnings();
+    tutorial22.makeController();
+    tutorial22.makeGuide();
+    tutorial22.activeUsers();
 });
