@@ -1,4 +1,4 @@
-
+var thistutorial = tutorial11;
 // Module for the guide pages
 tutorial11.pages = {};
 
@@ -34,41 +34,20 @@ tutorial11.pages.isNum = function(result) {
 // All pages
 tutorial11.pages.list =
     [
-      {title:'Haskell Interactive Tutorials',
-       guide:
-       '<div class="indent">' +
-       '<h3>Haskell Interactive Tutorials</h3>' +
-       //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 1 it is <a href="'+tutorial11.url+'">'+tutorial11.url+'</a>.</p>'+
-       '<br>'+
-       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
-       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
-       '<p>Type <code>start</code>  at the <span style="color: purple">&#955;</span> prompt to start the tutorial.</p>' +
-       '<p>Or try typing any Haskell expression and see what happens.' +
-       '<small class="note">(click to insert)</small>:</p>' +
-       '<p>' +
-       '<code title="Click me to insert &quot;23 * 36&quot; into the console." style="cursor: pointer;">23 * 36</code> or <code title="Click me to insert &quot;reverse ' +
-       '&quot;hello&quot;&quot; into the console." style="cursor: pointer;">reverse ' +
-       '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
-       '</p>' +
 
-       '</div>'
-      },
-        {title:'Tutorial 1: Expressions',
-         guide:
-         '<div class="indent">' +
-         '<h3>Tutorial 1: The Basics: Expressions, Functions and Equations</h3>' +
+        {title:'Tutorial 1.1: Expressions',
+         guide:         
+         '<h3>Tutorial 1.1: The Basics: Expressions, Functions and Equations</h3>' +
          '<p>This tutorial will guide you through the basic concepts of the Haskell language: expressions, functions and equations. You will learn the syntax, how to create expressions, how to use functions in expressions and how to give your expressions names using equations.</p>'+
-         '<p>Type <code>step3</code>  at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +
-         '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
+         '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>' +
          '<p>This tutorial has four sections:</p>'+
          '<ol>'+
-         '<li>Integer Expressions (<code>step3</code>)</li>'+
-         '<li>Syntax of Expressions (<code>step5</code>)</li>'+
-         '<li>Functions (<code>step12</code>)</li>'+
-         '<li>Equations (<code>step19</code>)</li>'+
+         '<li>Integer Expressions (<code>step2</code>)</li>'+
+         '<li>Syntax of Expressions (<code>step4</code>)</li>'+
+         '<li>Functions (<code>step11</code>)</li>'+
+         '<li>Equations (<code>step18</code>)</li>'+
          '</ol>'+
-         '</div>'
+         '<p>Type <code>step2</code> at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>'                             
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
@@ -489,5 +468,44 @@ return msg;
 	    return msg;
 	  },
 	},
-
+    {title:'Haskell Interactive Tutorials',
+   	 guide:    	    	  
+   	       '<h3>Haskell Interactive Tutorials</h3>' +
+   	       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. '+
+   	       'Each tutorial has its own url,'+
+   	       ' the url for this tutorial is <a href="'+thistutorial.url+'">'+thistutorial.url+'</a>.</p>'+
+   	       '<h4>Functionality</h4>' +
+   	       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, '+
+   	       'because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
+   	       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">the following</a> IO actions are supported in this app (more about this later in the course).</p>' +
+   	       '<p>You cannot declare your own types or load content from modules</p>'+
+   	       '<h4>Navigation commands</h4>' +
+   	       '<p>You can either type commands at the <span style="color: purple">&#955;</span> prompt or click on any command link in the tutorial text (styled like this: <code>help</code>), this will insert that command at the prompt.</p>' +
+   	       '<p>To navigate between steps in the tutorial you can use following commands:</p>' +
+   	       '<ul>' +
+   	       '<li>To start the tutorial: type <code>start</code> at the <span style="color: purple">&#955;</span> prompt </li>' +
+   	       '<li>To go to the next step: <code>next</code></li>' +
+   	       '<li>To go to the previous step: <code>prev</code> or <code>back</code> </li>' +
+   	       '<li>To go to a particular step <i>n</i>: <code>step<i>n</i></code></li>' +
+   	       '<li>To see this help message: <code>help</code> '+
+   	       '</ul>' +
+   	       '<p>On the command line you can use the left and right arrows or <tt>Ctrl-b</tt> and <tt>Ctrl-f</tt>, as well as <tt>Ctrl-a</tt> to jump to the start of the line and <tt>Ctrl-e</tt> to jump to the end of the line.</p>' +
+   	    '<p>You can use the up and down arrows or <tt>Ctrl-p</tt> and <tt>Ctrl-n</tt> to navigate through the history of commands you entered.</p>' +
+   	       '<h4>Manipulating the context</h4>' +    	       
+   	       '<p>The environment keeps a list of all equations you defined, we call this the <i>context</i>. Every computation you execute uses this context as follows:</p>' +
+   	       '<pre>'+
+   	       'let<br>'+
+   	       '  <i>context</i><br>'+
+   	       'in<br>'+
+   	       '  <i>your_expression</i>'+
+   	       '</pre>' +
+	       '<p>You can access and manipulate the context in the following ways:</p>' +
+	       '<ul>' +
+   	       '<li>Inspect the context: <code>context</code> or <code>show</code></li>' +
+   	       '<li>Remove the last added equation: <code>undo</code></li>' +
+   	       '<li>Remove the equation for a given variable: <code>forget <i>varname</i></code></li>' +
+   	       '<li>Erase the entire context: <code>erase</code> or <code>wipe</code></li>' +
+   	       '<li>Reset the tutorial completely: <code>reset</code></li>' +
+   	       '</ul>'
+   	      },
     ];

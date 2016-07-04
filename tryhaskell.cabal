@@ -20,6 +20,8 @@ data-files:          Imports.hs
                      static/css/tutorial.css
                      static/css/tutorial1.css
                      static/css/tutorial2.css
+                     static/css/tutorial31.css
+                     static/css/tutorial32.css
                      static/js/jquery.console.js
                      static/js/tryhaskell.js
                      static/js/tryhaskell.pages.js
@@ -27,6 +29,10 @@ data-files:          Imports.hs
                      static/js/tutorial1.pages.js
                      static/js/tutorial2.js
                      static/js/tutorial2.pages.js
+                     static/js/tutorial31.js
+                     static/js/tutorial31.pages.js
+                     static/js/tutorial32.js
+                     static/js/tutorial32.pages.js
 
 library
   exposed-modules:   TryHaskell

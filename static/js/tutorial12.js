@@ -83,7 +83,7 @@ tutorial12.preCommandHook = function(line,report){
     tutorial12.nPages = pages.length;
     tutorial12.isEq = false;
     // if the line matches step{$n} then get page $n from  tutorial12.pages.list (i.e. pages)
-    if (m = line.trim().match(/^step([0-9]+)/)) {
+    if (m = line.trim().match(/^step\s*([0-9]+)/)) {
         var n = m[1] * 1;
         if (n <= pages.length) {
             tutorial12.setPage(n,null);
@@ -113,11 +113,20 @@ tutorial12.preCommandHook = function(line,report){
         }
         report();
         return [true,'True'];
-    } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial12.setPage(2,null);
+    } else if (line.trim() == 'start' ) {
+        tutorial12.setPage(1,null);
+        report();
+        return [true,'True'];        
+    } else if (line.trim() == 'help' ) {
+        tutorial12.setPage(tutorial12.pages.list.length,null);
         report();
         return [true,'True'];
-    } else if (/^(rase|wipe|reset)/.test(line.trim()) ) {
+    } else if (/^reset/.test(line.trim()) ) {
+        tutorial12.reset();
+        report();        
+        return [true,'True'];
+        
+    } else if (/^(erase|wipe)/.test(line.trim()) ) {
         tutorial12.wipe();
         report();        
         return [true,'True'];
@@ -190,20 +199,33 @@ tutorial12.preCommandHook = function(line,report){
     	// This is an equation for a function.     
     	// Return a lambda function e.g. f x = x => return \x -> x
         var nline = line.trim();
-        var chunks=nline.split(/=/);
-        nline = chunks.join(" = "); // how ugly! but .replace() does not work in FF 43 on Mac        
+        var tline=nline.replace(/=/,' = ');
+        nline = tline.replace(/=\s+=/,'=');
+//        nline = chunks.join(" = "); // how ugly! but .replace() does not work in FF 43 on Mac        
 //        alert(nline);
+        // Now a very dangerous hack
+        // When we see e.g. f x y z | ... 
+        // then we replace this by
+        // f x y z = let res | ... in res
+        // but res should be unique
+        var now = new Date().getTime();
+        var fixed_guard_line =nline.replace(/\|/, '= let res'+now+' | ');
+        fixed_guard_line+=' in res'+now;        
+//        alert(fixed_guard_line);
+        nline = fixed_guard_line;
         var chunks = nline.split(/\s+/);
         chunks.shift();        
         var retval = '\\'+chunks.join(' ');
         var retval2 = retval.replace(/=/,'->');
 //        alert(nline+' => ' + retval2);
         tutorial12.isEq = true;
+        
         tutorial12.equations.push(nline);
         var context = '';
         if (tutorial12.equations.length>0) {
         	context = 'let {'+ tutorial12.equations.join(';') +' } in '+retval2;//'True';
         }
+//        alert(context);
         line = context;                
         return [false,line];
     	
@@ -375,6 +397,19 @@ tutorial12.setPage = function(n,result){
         throw "Unknown page number: " + n;
     }
 };
+
+
+//Set the current page.
+tutorial12.reset = function(){
+   
+        // Update the current page content
+        var guide = $('#guide');
+  
+        tutorial12.makeGuidSamplesClickable();
+        // Update the location anchor  
+            window.location = '/tutorial12/';            
+};
+
 
 // Make the code examples in the guide clickable so that they're
 // inserted into the console.

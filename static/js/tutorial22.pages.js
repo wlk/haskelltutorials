@@ -42,33 +42,15 @@ tutorial22.pages.isBool = function(result) {
 // All pages
 tutorial22.pages.list =
     [
-      {title:'Haskell Interactive Tutorials',
-       guide:
-       '<div class="indent">' +
-       '<h3>Haskell Interactive Tutorials</h3>' +
-       //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 2 it is <a href="'+tutorial22.url+'">'+tutorial22.url+'</a>.</p>'+
-       '<br>'+
-       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
-       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
-       '<p>Type <code>start</code>  at the <span style="color: purple">&#955;</span> prompt to start the tutorial.</p>' +
-       '<p>Or try typing any Haskell expression and see what happens.' +
-       '<small class="note">(click to insert)</small>:</p>' +
-       '<p>' +
-       '<code title="Click me to insert &quot;23 * 36&quot; into the console." style="cursor: pointer;">23 * 36</code> or <code title="Click me to insert &quot;reverse ' +
-       '&quot;hello&quot;&quot; into the console." style="cursor: pointer;">reverse ' +
-       '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
-       '</p>' +
-
-       '</div>'
-      },
+      
         {title:'Tutorial 2.2: More Boolean Operations',
          guide:
-         '<div class="indent">' +
+         
          '<h3>Tutorial 2.2: More Boolean Operations</h3>' +
          '<p>We are going to look at some more boolean operations today.</p>'+
-         '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
-         '</div>'
+         '<p>To start the tutorial type <code>next</code> at the <span style="color: purple">&#955;</span> prompt.</p>' +
+         '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>' 
+         
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
@@ -269,7 +251,7 @@ tutorial22.pages.list =
 	  },
 	  guide:function(result){
 		  
-	    var msg="<h3>And that's the end of Tutorial 2!</h3>" +
+	    var msg="<h3>And that's the end of Tutorial 2.2!</h3>" +
 	    		"<p>Well done, you finished another Haskell tutorial!.</p>" +
 	    		"<p>Let's recap what we've just discovered:</p>" +
 	            '<ul>'+
@@ -281,4 +263,41 @@ tutorial22.pages.list =
 	    return msg;
 	  },
 	},
+    {title:'Haskell Interactive Tutorials',
+      	 guide:    	    	  
+      	       '<h3>Haskell Interactive Tutorials</h3>' +
+      	       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. '+
+      	       'Each tutorial has its own url,'+
+      	       ' for this tutorial the url is <a href="'+tutorial22.url+'">'+tutorial22.url+'</a>.</p>'+
+      	       '<h4>Functionality</h4>' +
+      	       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, '+
+      	       'because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
+      	       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">the following</a> IO actions are supported in this app (more about this later in the course).</p>' +    	       
+      	       '<h4>Navigation commands</h4>' +
+      	       '<p>To navigate between steps in the tutorial you can use following commands:</p>' +
+      	       '<ul>' +
+      	       '<li>To start the tutorial: type <code>start</code> at the <span style="color: purple">&#955;</span> prompt </li>' +
+      	       '<li>To go to the next step: <code>next</code></li>' +
+      	       '<li>To go to the previous step: <code>prev</code> or <code>back</code> </li>' +
+      	       '<li>To go to a particular step <i>n</i>: <code>step<i>n</i></code></li>' +
+      	       '<li>To see this help message: <code>help</code> '+
+      	       '</ul>' +
+      	       '<h4>Manipulating the context</h4>' +    	       
+      	       '<p>The environment keeps a list of all equations you defined, we call this the <i>context</i>. Every computation you execute uses this context as follows:</p>' +
+      	       '<pre>'+
+      	       'let<br>'+
+      	       '  <i>context</i><br>'+
+      	       'in<br>'+
+      	       '  <i>your_expression</i>'+
+      	       '</pre>' +
+  	    	   '<p>You can access and manipulate the context in the following ways:</p>' +
+  	    	   '<ul>' +
+      	       '<li>Inspect the context: <code>context</code> or <code>show</code></li>' +
+      	       '<li>Remove the last added equation: <code>undo</code></li>' +
+      	       '<li>Remove the equation for a given variable: <code>forget <i>varname</i></code></li>' +
+   	       '<li>Erase the entire context: <code>erase</code> or <code>wipe</code></li>' +
+   	       '<li>Reset the tutorial completely: <code>reset</code></li>' +
+      	       '</ul>'
+      	      },	
+	
 ]

@@ -51,6 +51,9 @@ tutorial11.undo  = function() {
     }
 }
 
+tutorial11.wipe = function() {    
+     tutorial11.equations=[]  ;  
+}
 
 // Files in the file system.
 tutorial11.files = {
@@ -80,7 +83,7 @@ tutorial11.preCommandHook = function(line,report){
     tutorial11.nPages = pages.length;
     tutorial11.isEq = false;
     // if the line matches step{$n} then get page $n from  tutorial11.pages.list (i.e. pages)
-    if (m = line.trim().match(/^step([0-9]+)/)) {
+    if (m = line.trim().match(/^step\s*([0-9]+)/)) {
         var n = m[1] * 1;
         if (n <= pages.length) {
             tutorial11.setPage(n,null);
@@ -110,22 +113,50 @@ tutorial11.preCommandHook = function(line,report){
         }
         report();
         return [true,'True'];
-    } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial11.setPage(2,null);
+    } else if (line.trim() == 'start' ) {
+        tutorial11.setPage(1,null);
+        report();
+        return [true,'True'];        
+    } else if (line.trim() == 'help' ) {
+        tutorial11.setPage(tutorial11.pages.list.length,null);
         report();
         return [true,'True'];
+    } else if (/^reset/.test(line.trim()) ) {
+        tutorial11.reset();
+        report();        
+        return [true,'True'];
+        
+    } else if (/^(erase|wipe)/.test(line.trim()) ) {
+        tutorial11.wipe();
+        report();        
+        return [true,'True'];
+        
     } else if (/^undo/.test(line.trim()) ) {
         tutorial11.undo();
         report();        
         return [true,'True'];
+    } else if (/^(context|show)/.test(line.trim()) ) {        
+        report();     
+        alert('{ '+ tutorial11.equations.join(';') +' }');
+        return [true,'True'];        
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
         var varname = chunks[1];
         tutorial11.forget(varname);
         report();
         return [true,'True'];
-    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
-        var nline = line.trim();
+    }  else if (/^\\/.test( line.trim() ) ) { // this is because application requires parentheses anyway
+    	var nline = line.trim();
+    	var exprs = nline.split(/\s*\-\>\s*/);
+    	//line = exprs[1];
+    	line = nline; // try to return the whole lambda function
+    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*
+    	
+    	// This is an equation.     	
+        var nnline = line.trim();
+        var nline=nnline.replace(/=/,' = ');
+        
+//        alert('HERE:'+nline);
         tutorial11.isEq = true;
         tutorial11.equations.push(nline);
         var context = '';
@@ -135,6 +166,13 @@ tutorial11.preCommandHook = function(line,report){
          var chunks = nline.split(/\s+=\s+/);
          var lhs = chunks[0];
          var rhs=chunks[1];
+         // Now, if the rhs is a lambda we should not return the lhs
+         // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
+         var isLambda = false;
+         if (/^\\/.test(rhs)) {
+        	 isLambda = true;      
+//        	 alert("LAMBDA:"+rhs);
+         }
          //lhs.replace(/\W+/g,'');
          //rhs.replace(/\W+/g,'');
 //         alert('PRE:<'+lhs+'><'+rhs+'>');
@@ -147,12 +185,55 @@ tutorial11.preCommandHook = function(line,report){
              tutorial11.isEq = false;
              line = 'let '+nline+' in '+lhs;
          } else {
+        	 if (!isLambda) {
              line = context + lhs;
+        	 } else {
+        		 var exprs = rhs.split(/\s*\-\>\s*/);
+        		 var expr = exprs[1];
+        		 line = context + expr;
+//        		 alert(line);
+        	 }
          }
         return [false,line];
+    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)+\s*(=[^=\>\<]|\|)/.test( line.trim() ) ) {        
+    	// This is an equation for a function.     
+    	// Return a lambda function e.g. f x = x => return \x -> x
+        var nline = line.trim();
+        var tline=nline.replace(/=/,' = ');
+        nline = tline.replace(/=\s+=/,'=');
+//        nline = chunks.join(" = "); // how ugly! but .replace() does not work in FF 43 on Mac        
+//        alert(nline);
+        // Now a very dangerous hack
+        // When we see e.g. f x y z | ... 
+        // then we replace this by
+        // f x y z = let res | ... in res
+        // but res should be unique
+        var now = new Date().getTime();
+        var fixed_guard_line =nline.replace(/\|/, '= let res'+now+' | ');
+        fixed_guard_line+=' in res'+now;        
+//        alert(fixed_guard_line);
+        nline = fixed_guard_line;
+        var chunks = nline.split(/\s+/);
+        chunks.shift();        
+        var retval = '\\'+chunks.join(' ');
+        var retval2 = retval.replace(/=/,'->');
+//        alert(nline+' => ' + retval2);
+        tutorial11.isEq = true;
+        
+        tutorial11.equations.push(nline);
+        var context = '';
+        if (tutorial11.equations.length>0) {
+        	context = 'let {'+ tutorial11.equations.join(';') +' } in '+retval2;//'True';
+        }
+//        alert(context);
+        line = context;                
+        return [false,line];
+    	
     } else {
         // OK, an expression that is not an equation
+    	
         line = 'let {'+ tutorial11.equations.join(';') +' } in '+line.trim();
+//        alert(line);
     }
     return [false,line];
 };
@@ -215,9 +296,28 @@ tutorial11.ajaxCommand = function(line,report,stdin){
                 tutorial11.controller.continuedPrompt = false;
             } else {
                 if(result.error !== undefined){
+//                	alert('ERROR:'+result.error);
+                	if (/No\ instance\ for\ .Typeable/.test(result.error)) {
+//                		alert(args.exp);
+                		tutorial11.continueOnError=true;
+                		result.error = ":: ? -> ?";
+                	} else
+                	if (/No\ instance\ for\ .Show/.test(result.error)) {
+//                		alert(result.error);
+//                		tutorial11.continueOnError=true;
+                		result.error = "Sorry, I can't display this result.";
+                	}
+//                	else
+//                		if (/No\ instance\ for\ ./.test(result.error)) {
+//                    		tutorial11.continueOnError=true;
+//                    		result.error = ":: Expr";
+//                    	}
+//                	if (/Could\ not\ deduce\ .Ord/.test(result.error)) {
+//                		
+//                	}
 // A type error goes here,
 // What I want is the option to carry on
-                    result.expr = args.exp                    
+                    result.expr = args.exp;                    
                     if (tutorial11.continueOnError) {
                         if(tutorial11.successHook != null) {
                             tutorial11.successHook(result);
@@ -298,6 +398,19 @@ tutorial11.setPage = function(n,result){
     }
 };
 
+
+//Set the current page.
+tutorial11.reset = function(){
+   
+        // Update the current page content
+        var guide = $('#guide');
+  
+        tutorial11.makeGuidSamplesClickable();
+        // Update the location anchor  
+            window.location = '/tutorial11/';            
+};
+
+
 // Make the code examples in the guide clickable so that they're
 // inserted into the console.
 tutorial11.makeGuidSamplesClickable = function() {
@@ -310,6 +423,19 @@ tutorial11.makeGuidSamplesClickable = function() {
             tutorial11.controller.inner.click();
         });
     });
+    $('span.code').each(function(){
+    	
+        $(this).css('cursor','pointer');
+        
+//        $(this).attr('title','Click me to insert "' +
+//                     $(this).text() + '" into the console.');
+        $(this).click(function(){
+//        	$(this).css('color','blue');
+            tutorial11.controller.promptText($(this).attr('data-step'));            
+            tutorial11.controller.inner.click();            
+        });
+    });
+    
 }
 
 // Display the currently active users

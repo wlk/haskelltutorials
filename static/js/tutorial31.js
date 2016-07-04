@@ -83,7 +83,7 @@ tutorial31.preCommandHook = function(line,report){
     tutorial31.nPages = pages.length;
     tutorial31.isEq = false;
     // if the line matches step{$n} then get page $n from  tutorial31.pages.list (i.e. pages)
-    if (m = line.trim().match(/^step([0-9]+)/)) {
+    if (m = line.trim().match(/^step\s*([0-9]+)/)) {
         var n = m[1] * 1;
         if (n <= pages.length) {
             tutorial31.setPage(n,null);
@@ -113,11 +113,20 @@ tutorial31.preCommandHook = function(line,report){
         }
         report();
         return [true,'True'];
-    } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial31.setPage(2,null);
+    } else if (line.trim() == 'start' ) {
+        tutorial31.setPage(1,null);
+        report();
+        return [true,'True'];        
+    } else if (line.trim() == 'help' ) {
+        tutorial31.setPage(tutorial31.pages.list.length,null);
         report();
         return [true,'True'];
-    } else if (/^(rase|wipe|reset)/.test(line.trim()) ) {
+    } else if (/^reset/.test(line.trim()) ) {
+        tutorial31.reset();
+        report();        
+        return [true,'True'];
+        
+    } else if (/^(erase|wipe)/.test(line.trim()) ) {
         tutorial31.wipe();
         report();        
         return [true,'True'];
@@ -388,6 +397,19 @@ tutorial31.setPage = function(n,result){
         throw "Unknown page number: " + n;
     }
 };
+
+
+//Set the current page.
+tutorial31.reset = function(){
+   
+        // Update the current page content
+        var guide = $('#guide');
+  
+        tutorial31.makeGuidSamplesClickable();
+        // Update the location anchor  
+            window.location = '/tutorial31/';            
+};
+
 
 // Make the code examples in the guide clickable so that they're
 // inserted into the console.
