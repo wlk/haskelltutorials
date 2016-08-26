@@ -1,0 +1,2 @@
+ GHCRTS='-H1G -M2G'
+ export GHCRTS
