@@ -46,9 +46,9 @@ tutorial23.forget = function(varname) {
 }
 
 tutorial23.undo  = function() {
-    if (tutorial23.isEq) {
+//    if (tutorial23.isEq) {
      tutorial23.equations.pop();
-    }
+//    }
 }
 
 

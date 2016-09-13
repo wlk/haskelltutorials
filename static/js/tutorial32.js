@@ -46,9 +46,9 @@ tutorial32.forget = function(varname) {
 }
 
 tutorial32.undo  = function() {
-    if (tutorial32.isEq) {
+//    if (tutorial32.isEq) {
      tutorial32.equations.pop();
-    }
+//    }
 }
 
 tutorial32.wipe = function() {    
@@ -155,8 +155,6 @@ tutorial32.preCommandHook = function(line,report){
     	// This is an equation.     	
         var nnline = line.trim();
         var nline=nnline.replace(/=/,' = ');
-        
-//        alert('HERE:'+nline);
         tutorial32.isEq = true;
         tutorial32.equations.push(nline);
         var context = '';
@@ -198,21 +196,17 @@ tutorial32.preCommandHook = function(line,report){
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)+\s*(=[^=\>\<]|\|)/.test( line.trim() ) ) {        
     	// This is an equation for a function.     
     	// Return a lambda function e.g. f x = x => return \x -> x
-        var nline = line.trim();
-        var tline=nline.replace(/=/,' = ');
-        nline = tline.replace(/=\s+=/,'=');
-//        nline = chunks.join(" = "); // how ugly! but .replace() does not work in FF 43 on Mac        
-//        alert(nline);
-        // Now a very dangerous hack
-        // When we see e.g. f x y z | ... 
-        // then we replace this by
-        // f x y z = let res | ... in res
-        // but res should be unique
+        var nline = line.trim();        
+        var tline1=nline.replace(/==/,'##');
+        var tline2=tline1.replace(/=/,' = ');
+        var tline3 = tline2.replace(/=\s+=/,'=');
+        nline = tline3.replace(/##/,'==');        
         var now = new Date().getTime();
-        var fixed_guard_line =nline.replace(/\|/, '= let res'+now+' | ');
-        fixed_guard_line+=' in res'+now;        
-//        alert(fixed_guard_line);
-        nline = fixed_guard_line;
+        if (/\|/.test(nline)) {
+        	var fixed_guard_line =nline.replace(/\|/, '= let res'+now+' | ');
+        	fixed_guard_line+=' in res'+now;        
+        	nline = fixed_guard_line;
+        }
         var chunks = nline.split(/\s+/);
         chunks.shift();        
         var retval = '\\'+chunks.join(' ');
