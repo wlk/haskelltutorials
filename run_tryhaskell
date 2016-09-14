@@ -1,5 +1,7 @@
 GHC_VERSION=`ghc --version | cut -d' ' -f 8`
 
+SSL_OPTS="--ssl-port=443 --ssl-cert=server.cert --ssl-key=server.key"
+
 if [[ `uname` == 'Darwin' ]]; then
    OS="osx"
 elif [[ `uname` == 'Linux' ]]; then
@@ -12,4 +14,4 @@ mkdir -p $TRY_HASKELL_PATH
 cp -r  ./static  $TRY_HASKELL_PATH
 cp  ./Imports.hs $TRY_HASKELL_PATH
 
-env MUEVAL_TIMEOUT=10 PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell
+env MUEVAL_TIMEOUT=10 PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell ${SSL_OPTS}
