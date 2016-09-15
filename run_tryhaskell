@@ -1,5 +1,8 @@
 GHC_VERSION=`ghc --version | cut -d' ' -f 8`
 
+# SSL not working - but going to proxy anyway, on AWS
+#SSL_OPTS="--ssl-port=443 --ssl-cert=server.cert --ssl-key=server.key"
+
 if [[ `uname` == 'Darwin' ]]; then
    OS="osx"
 elif [[ `uname` == 'Linux' ]]; then
