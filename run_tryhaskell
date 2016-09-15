@@ -12,4 +12,4 @@ mkdir -p $TRY_HASKELL_PATH
 cp -r  ./static  $TRY_HASKELL_PATH
 cp  ./Imports.hs $TRY_HASKELL_PATH
 
-env MUEVAL_TIMEOUT=10 PATH=./.cabal-sandbox/bin:$PATH   GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell
+env MUEVAL_TIMEOUT=10 PATH=./.cabal-sandbox/bin:$PATH  GHC_PACKAGE_PATH=$(cabal sandbox hc-pkg list | grep '^/.*\.cabal-sandbox')   ./dist/build/tryhaskell/tryhaskell

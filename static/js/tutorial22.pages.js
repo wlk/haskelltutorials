@@ -1,4 +1,4 @@
-
+var thistutorial = tutorial22;
 // Module for the guide pages
 tutorial22.pages = {};
 

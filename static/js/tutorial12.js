@@ -26,28 +26,45 @@ tutorial12.io = null;
 tutorial12.continueOnError = false;
 // Handle context for equations
 tutorial12.equations=[];
+// 20160915 allow to remove equations
 tutorial12.isEq = false;
+tutorial12.has_eq = function(varname) {
+	var has_varname=false;
+	
+    for (var i = 0; i <  tutorial12.equations.length; i++) {
+        var eq = tutorial12.equations[i];
+    	
+        var chunks = eq.split(/\s*=\s*/);
+        var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!
+        alert(eq+':'+varname+'<>'+lhs);
+        varre = new RegExp('\\b'+varname+'\\b');
+        if (varre.test(lhs)) {
+        	alert('Found '+varname);
+       	 	has_varname=true;
+       	 	break;
+        }
+    }
+	return has_varname;	
+}
 tutorial12.forget = function(varname) {
-//	alert('FORGET');
 	var remaining_eqs = [];
          for (var i = 0; i <  tutorial12.equations.length; i++) {
              var eq = tutorial12.equations[i];
              var chunks = eq.split(/\s*=\s*/);
              var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
-//             alert('<'+lhs+'><'+varname+'>');
              varre = new RegExp('\\b'+varname+'\\b');
              if (!varre.test(lhs)) {
-//            	 alert('Pushing '+eq);
             	 remaining_eqs.push(tutorial12.equations[i]);
+             } else {
+            	 alert('Forgetting '+varname);
              }
          }
          tutorial12.equations=remaining_eqs;
-//         alert(varname+" => "+tutorial12.equations);
 }
 
 tutorial12.undo  = function() {
 //    if (tutorial12.isEq) {
-    	tutorial12.equations.pop();
+     tutorial12.equations.pop();
 //    }
 }
 
@@ -150,34 +167,33 @@ tutorial12.preCommandHook = function(line,report){
     	var exprs = nline.split(/\s*\-\>\s*/);
     	//line = exprs[1];
     	line = nline; // try to return the whole lambda function
-    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*
-    	
+    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*    	
     	// This is an equation.     	
         var nnline = line.trim();
         var nline=nnline.replace(/=/,' = ');
+        var chunks = nline.split(/\s+=\s+/);
+        var lhs = chunks[0].trim();
+        var rhs=chunks[1];
         
-//        alert('HERE:'+nline);
         tutorial12.isEq = true;
+        if (tutorial12.equations.length>0) {alert( 'test dups'+lhs );
+        	if (tutorial12.has_eq(lhs)) {        	
+        		tutorial12.forget(lhs);
+        	}
+        }
         tutorial12.equations.push(nline);
         var context = '';
         if (tutorial12.equations.length>0) {
         	context = 'let {'+ tutorial12.equations.join(';') +' } in ';
         }
-         var chunks = nline.split(/\s+=\s+/);
-         var lhs = chunks[0];
-         var rhs=chunks[1];
          // Now, if the rhs is a lambda we should not return the lhs
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
          if (/^\\/.test(rhs)) {
         	 isLambda = true;      
-//        	 alert("LAMBDA:"+rhs);
          }
-         //lhs.replace(/\W+/g,'');
-         //rhs.replace(/\W+/g,'');
-//         alert('PRE:<'+lhs+'><'+rhs+'>');
-         // This is a naive check for recursion, we ignore the context
          
+         // This is a naive check for recursion, we ignore the context         
          var re = new RegExp('\\b'+lhs+'\\b');
          if (re.test(rhs)) {
 //        	 alert('Recursion!');
@@ -213,12 +229,22 @@ tutorial12.preCommandHook = function(line,report){
         chunks.shift();        
         var retval = '\\'+chunks.join(' ');
         var retval2 = retval.replace(/=/,'->');
-        tutorial12.isEq = true;        
+//        alert(nline+' => ' + retval2);
+        tutorial12.isEq = true;
+        var chunks=nline.split(/\s*=\s*/);
+        var lhs = chunks[0].trim();
+        if (tutorial12.equations.length>0) {alert( 'test dups <'+lhs+'>' );
+        	if (tutorial12.has_eq(lhs)) {        	
+        		tutorial12.forget(lhs);
+        	}
+        }
+        
         tutorial12.equations.push(nline);
         var context = '';
         if (tutorial12.equations.length>0) {
-        	context = 'let {'+ tutorial12.equations.join(';') +' } in '+retval2;
+        	context = 'let {'+ tutorial12.equations.join(';') +' } in '+retval2;//'True';
         }
+//        alert(context);
         line = context;                
         return [false,line];
     	

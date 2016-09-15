@@ -1,4 +1,4 @@
-
+var thistutorial = tutorial23;
 // Module for the guide pages
 tutorial23.pages = {};
 
@@ -51,33 +51,14 @@ tutorial23.pages.isString = function(result) {
 // All pages
 tutorial23.pages.list =
     [
-      {title:'Haskell Interactive Tutorials',
-       guide:
-       '<div class="indent">' +
-       '<h3>Haskell Interactive Tutorials</h3>' +
-       //title="Click me to insert &quot;start&quot; into the console." style="cursor: pointer;"
-       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. Each tutorial has its own url, e.g. for Tutorial 2 it is <a href="'+tutorial23.url+'">'+tutorial23.url+'</a>.</p>'+
-       '<br>'+
-       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
-       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">these</a> IO actions are supported in this app (more about this later in the course).</p>' +
-       '<p>Type <code>start</code>  at the <span style="color: purple">&#955;</span> prompt to start the tutorial.</p>' +
-       '<p>Or try typing any Haskell expression and see what happens.' +
-       '<small class="note">(click to insert)</small>:</p>' +
-       '<p>' +
-       '<code title="Click me to insert &quot;23 * 36&quot; into the console." style="cursor: pointer;">23 * 36</code> or <code title="Click me to insert &quot;reverse ' +
-       '&quot;hello&quot;&quot; into the console." style="cursor: pointer;">reverse ' +
-       '"hello"</code> or <code title="Click me to insert &quot;foldr (:) [] [1,2,3]&quot; into the console." style="cursor: pointer;">foldr (:) [] [1,2,3]</code> or <code title="Click me to insert." style="cursor: pointer;">do line <- getLine; putStrLn line</code> or <code>readFile "/welcome"</code>' +
-       '</p>' +
-
-       '</div>'
-      },
         {title:'Tutorial 2.3: Input/Output Operations',
          guide:
          '<div class="indent">' +
          '<h3>Tutorial 2.3: Input/Output Operations</h3>' +
          '<p>We are going to explore how to do simple string-based input/output operations today.</p>'+
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
-         '</div>'
+         '</div>'+
+         '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>'
         },
         ////////////////////////////////////////////////////////////////////////
         // Lesson 1
@@ -205,4 +186,29 @@ tutorial23.pages.list =
 	    return msg;
 	  },
 	},
+    {title:'Haskell Interactive Tutorials',
+	   	 guide:    	    	  
+	   	       '<h3>Haskell Interactive Tutorials</h3>' +
+	   	       '<p>In this environment you can try out Haskell code or take tutorials that guide you by prompting you to enter pieces of code and give you feedback on them. '+
+	   	       'Each tutorial has its own url,'+
+	   	       ' the url for this tutorial is <a href="'+thistutorial.url+'">'+thistutorial.url+'</a>.</p>'+
+	   	       '<h4>Functionality</h4>' +
+	   	       '<p>This coding environment does not offer all the functionality of the Haskell compiler <tt>ghc</tt> or the interactive Haskell interpreter <tt>ghci</tt>, '+
+	   	       'because that would allow hackers to compromise your computer. Any feature that could potentially be a security risk has been disabled.</p>'+
+	   	       '<p>Only <a href="https://hackage.haskell.org/package/pure-io-0.2.0/docs/PureIO.html#g:2">the following</a> IO actions are supported in this app (more about this later in the course).</p>' +
+	   	       '<p>You cannot declare your own types or load content from modules</p>'+
+	   	       '<h4>Navigation commands</h4>' +
+	   	       '<p>You can either type commands at the <span style="color: purple">&#955;</span> prompt or click on any command link in the tutorial text (styled like this: <code>help</code>), this will insert that command at the prompt.</p>' +
+	   	       '<p>To navigate between steps in the tutorial you can use following commands:</p>' +
+	   	       '<ul>' +
+	   	       '<li>To start the tutorial: type <code>start</code> at the <span style="color: purple">&#955;</span> prompt </li>' +
+	   	       '<li>To go to the next step: <code>next</code></li>' +
+	   	       '<li>To go to the previous step: <code>prev</code> or <code>back</code> </li>' +
+	   	       '<li>To go to a particular step <i>n</i>: <code>step<i>n</i></code></li>' +
+	   	       '<li>To see this help message: <code>help</code> '+
+	   	       '</ul>' +
+	   	       '<p>On the command line you can use the left and right arrows or <tt>Ctrl-b</tt> and <tt>Ctrl-f</tt>, as well as <tt>Ctrl-a</tt> to jump to the start of the line and <tt>Ctrl-e</tt> to jump to the end of the line.</p>' +
+	   	    '<p>You can use the up and down arrows or <tt>Ctrl-p</tt> and <tt>Ctrl-n</tt> to navigate through the history of commands you entered.</p>' +
+	   	       '<p>NOTE: this tutorial (2.3) has no context as it conflicts with the IO operations, so you cannot define equations.</p>'     	       
+	   	      },	
 ]

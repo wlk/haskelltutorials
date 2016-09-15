@@ -26,23 +26,40 @@ tutorial11.io = null;
 tutorial11.continueOnError = false;
 // Handle context for equations
 tutorial11.equations=[];
+// 20160915 allow to remove equations
 tutorial11.isEq = false;
+tutorial11.has_eq = function(varname) {
+	var has_varname=false;
+	
+    for (var i = 0; i <  tutorial11.equations.length; i++) {
+        var eq = tutorial11.equations[i];
+    	
+        var chunks = eq.split(/\s*=\s*/);
+        var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!
+        alert(eq+':'+varname+'<>'+lhs);
+        varre = new RegExp('\\b'+varname+'\\b');
+        if (varre.test(lhs)) {
+        	alert('Found '+varname);
+       	 	has_varname=true;
+       	 	break;
+        }
+    }
+	return has_varname;	
+}
 tutorial11.forget = function(varname) {
-//	alert('FORGET');
 	var remaining_eqs = [];
          for (var i = 0; i <  tutorial11.equations.length; i++) {
              var eq = tutorial11.equations[i];
              var chunks = eq.split(/\s*=\s*/);
              var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
-//             alert('<'+lhs+'><'+varname+'>');
              varre = new RegExp('\\b'+varname+'\\b');
              if (!varre.test(lhs)) {
-//            	 alert('Pushing '+eq);
             	 remaining_eqs.push(tutorial11.equations[i]);
+             } else {
+            	 alert('Forgetting '+varname);
              }
          }
          tutorial11.equations=remaining_eqs;
-//         alert(varname+" => "+tutorial11.equations);
 }
 
 tutorial11.undo  = function() {
@@ -150,34 +167,33 @@ tutorial11.preCommandHook = function(line,report){
     	var exprs = nline.split(/\s*\-\>\s*/);
     	//line = exprs[1];
     	line = nline; // try to return the whole lambda function
-    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*
-    	
+    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*    	
     	// This is an equation.     	
         var nnline = line.trim();
         var nline=nnline.replace(/=/,' = ');
+        var chunks = nline.split(/\s+=\s+/);
+        var lhs = chunks[0].trim();
+        var rhs=chunks[1];
         
-//        alert('HERE:'+nline);
         tutorial11.isEq = true;
+        if (tutorial11.equations.length>0) {alert( 'test dups'+lhs );
+        	if (tutorial11.has_eq(lhs)) {        	
+        		tutorial11.forget(lhs);
+        	}
+        }
         tutorial11.equations.push(nline);
         var context = '';
         if (tutorial11.equations.length>0) {
         	context = 'let {'+ tutorial11.equations.join(';') +' } in ';
         }
-         var chunks = nline.split(/\s+=\s+/);
-         var lhs = chunks[0];
-         var rhs=chunks[1];
          // Now, if the rhs is a lambda we should not return the lhs
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
          if (/^\\/.test(rhs)) {
         	 isLambda = true;      
-//        	 alert("LAMBDA:"+rhs);
          }
-         //lhs.replace(/\W+/g,'');
-         //rhs.replace(/\W+/g,'');
-//         alert('PRE:<'+lhs+'><'+rhs+'>');
-         // This is a naive check for recursion, we ignore the context
          
+         // This is a naive check for recursion, we ignore the context         
          var re = new RegExp('\\b'+lhs+'\\b');
          if (re.test(rhs)) {
 //        	 alert('Recursion!');
@@ -198,7 +214,7 @@ tutorial11.preCommandHook = function(line,report){
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)+\s*(=[^=\>\<]|\|)/.test( line.trim() ) ) {        
     	// This is an equation for a function.     
     	// Return a lambda function e.g. f x = x => return \x -> x
-        var nline = line.trim();
+        var nline = line.trim();        
         var tline1=nline.replace(/==/,'##');
         var tline2=tline1.replace(/=/,' = ');
         var tline3 = tline2.replace(/=\s+=/,'=');
@@ -215,6 +231,13 @@ tutorial11.preCommandHook = function(line,report){
         var retval2 = retval.replace(/=/,'->');
 //        alert(nline+' => ' + retval2);
         tutorial11.isEq = true;
+        var chunks=nline.split(/\s*=\s*/);
+        var lhs = chunks[0].trim();
+        if (tutorial11.equations.length>0) {alert( 'test dups <'+lhs+'>' );
+        	if (tutorial11.has_eq(lhs)) {        	
+        		tutorial11.forget(lhs);
+        	}
+        }
         
         tutorial11.equations.push(nline);
         var context = '';

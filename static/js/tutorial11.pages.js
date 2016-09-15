@@ -40,6 +40,7 @@ tutorial11.pages.list =
          '<h3>Tutorial 1.1: The Basics: Expressions, Functions and Equations</h3>' +
          '<p>This tutorial will guide you through the basic concepts of the Haskell language: expressions, functions and equations. You will learn the syntax, how to create expressions, how to use functions in expressions and how to give your expressions names using equations.</p>'+
          '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>' +
+         '<p><em>Please read the <code>help</code> now!</em></p>'+
          '<p>This tutorial has four sections:</p>'+
          '<ol>'+
          '<li>Integer Expressions (<code>step2</code>)</li>'+

@@ -26,31 +26,51 @@ tutorial2.io = null;
 tutorial2.continueOnError = false;
 // Handle context for equations
 tutorial2.equations=[];
+// 20160915 allow to remove equations
 tutorial2.isEq = false;
+tutorial2.has_eq = function(varname) {
+	var has_varname=false;
+	
+    for (var i = 0; i <  tutorial2.equations.length; i++) {
+        var eq = tutorial2.equations[i];
+    	
+        var chunks = eq.split(/\s*=\s*/);
+        var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!
+        alert(eq+':'+varname+'<>'+lhs);
+        varre = new RegExp('\\b'+varname+'\\b');
+        if (varre.test(lhs)) {
+        	alert('Found '+varname);
+       	 	has_varname=true;
+       	 	break;
+        }
+    }
+	return has_varname;	
+}
 tutorial2.forget = function(varname) {
-//	alert('FORGET');
 	var remaining_eqs = [];
          for (var i = 0; i <  tutorial2.equations.length; i++) {
              var eq = tutorial2.equations[i];
              var chunks = eq.split(/\s*=\s*/);
              var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
-//             alert('<'+lhs+'><'+varname+'>');
              varre = new RegExp('\\b'+varname+'\\b');
              if (!varre.test(lhs)) {
-//            	 alert('Pushing '+eq);
             	 remaining_eqs.push(tutorial2.equations[i]);
+             } else {
+            	 alert('Forgetting '+varname);
              }
          }
          tutorial2.equations=remaining_eqs;
-//         alert(varname+" => "+tutorial2.equations);
 }
 
 tutorial2.undo  = function() {
-    if (tutorial2.isEq) {
+//    if (tutorial2.isEq) {
      tutorial2.equations.pop();
-    }
+//    }
 }
 
+tutorial2.wipe = function() {    
+     tutorial2.equations=[]  ;  
+}
 
 // Files in the file system.
 tutorial2.files = {
@@ -80,7 +100,7 @@ tutorial2.preCommandHook = function(line,report){
     tutorial2.nPages = pages.length;
     tutorial2.isEq = false;
     // if the line matches step{$n} then get page $n from  tutorial2.pages.list (i.e. pages)
-    if (m = line.trim().match(/^step([0-9]+)/)) {
+    if (m = line.trim().match(/^step\s*([0-9]+)/)) {
         var n = m[1] * 1;
         if (n <= pages.length) {
             tutorial2.setPage(n,null);
@@ -110,44 +130,70 @@ tutorial2.preCommandHook = function(line,report){
         }
         report();
         return [true,'True'];
-    } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial2.setPage(2,null);
+    } else if (line.trim() == 'start' ) {
+        tutorial2.setPage(1,null);
+        report();
+        return [true,'True'];        
+    } else if (line.trim() == 'help' ) {
+        tutorial2.setPage(tutorial2.pages.list.length,null);
         report();
         return [true,'True'];
+    } else if (/^reset/.test(line.trim()) ) {
+        tutorial2.reset();
+        report();        
+        return [true,'True'];
+        
+    } else if (/^(erase|wipe)/.test(line.trim()) ) {
+        tutorial2.wipe();
+        report();        
+        return [true,'True'];
+        
     } else if (/^undo/.test(line.trim()) ) {
         tutorial2.undo();
         report();        
         return [true,'True'];
+    } else if (/^(context|show)/.test(line.trim()) ) {        
+        report();     
+        alert('{ '+ tutorial2.equations.join(';') +' }');
+        return [true,'True'];        
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
         var varname = chunks[1];
         tutorial2.forget(varname);
         report();
         return [true,'True'];
-    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
+    }  else if (/^\\/.test( line.trim() ) ) { // this is because application requires parentheses anyway
+    	var nline = line.trim();
+    	var exprs = nline.split(/\s*\-\>\s*/);
+    	//line = exprs[1];
+    	line = nline; // try to return the whole lambda function
+    }  else if (!/^let/.test( line.trim() ) && /^\w+\s*=[^=\>\<]/.test( line.trim() ) ) { // (\s+\w+)*    	
     	// This is an equation.     	
-        var nline = line.trim();
+        var nnline = line.trim();
+        var nline=nnline.replace(/=/,' = ');
+        var chunks = nline.split(/\s+=\s+/);
+        var lhs = chunks[0].trim();
+        var rhs=chunks[1];
+        
         tutorial2.isEq = true;
+        if (tutorial2.equations.length>0) {alert( 'test dups'+lhs );
+        	if (tutorial2.has_eq(lhs)) {        	
+        		tutorial2.forget(lhs);
+        	}
+        }
         tutorial2.equations.push(nline);
         var context = '';
         if (tutorial2.equations.length>0) {
         	context = 'let {'+ tutorial2.equations.join(';') +' } in ';
         }
-         var chunks = nline.split(/\s+=\s+/);
-         var lhs = chunks[0];
-         var rhs=chunks[1];
          // Now, if the rhs is a lambda we should not return the lhs
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
-         if (/\\/.test(rhs)) {
+         if (/^\\/.test(rhs)) {
         	 isLambda = true;      
-        	 alert("LAMBDA:"+rhs)
          }
-         //lhs.replace(/\W+/g,'');
-         //rhs.replace(/\W+/g,'');
-//         alert('PRE:<'+lhs+'><'+rhs+'>');
-         // This is a naive check for recursion, we ignore the context
          
+         // This is a naive check for recursion, we ignore the context         
          var re = new RegExp('\\b'+lhs+'\\b');
          if (re.test(rhs)) {
 //        	 alert('Recursion!');
@@ -155,16 +201,58 @@ tutorial2.preCommandHook = function(line,report){
              tutorial2.isEq = false;
              line = 'let '+nline+' in '+lhs;
          } else {
-             if (!isLambda) {
-		 line = context + lhs;
-             } else {
-        	 line = context + '"'+rhs+'"';
-             }
+        	 if (!isLambda) {
+             line = context + lhs;
+        	 } else {
+        		 var exprs = rhs.split(/\s*\-\>\s*/);
+        		 var expr = exprs[1];
+        		 line = context + expr;
+//        		 alert(line);
+        	 }
          }
         return [false,line];
+    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)+\s*(=[^=\>\<]|\|)/.test( line.trim() ) ) {        
+    	// This is an equation for a function.     
+    	// Return a lambda function e.g. f x = x => return \x -> x
+        var nline = line.trim();        
+        var tline1=nline.replace(/==/,'##');
+        var tline2=tline1.replace(/=/,' = ');
+        var tline3 = tline2.replace(/=\s+=/,'=');
+        nline = tline3.replace(/##/,'==');        
+        var now = new Date().getTime();
+        if (/\|/.test(nline)) {
+        	var fixed_guard_line =nline.replace(/\|/, '= let res'+now+' | ');
+        	fixed_guard_line+=' in res'+now;        
+        	nline = fixed_guard_line;
+        }
+        var chunks = nline.split(/\s+/);
+        chunks.shift();        
+        var retval = '\\'+chunks.join(' ');
+        var retval2 = retval.replace(/=/,'->');
+//        alert(nline+' => ' + retval2);
+        tutorial2.isEq = true;
+        var chunks=nline.split(/\s*=\s*/);
+        var lhs = chunks[0].trim();
+        if (tutorial2.equations.length>0) {alert( 'test dups <'+lhs+'>' );
+        	if (tutorial2.has_eq(lhs)) {        	
+        		tutorial2.forget(lhs);
+        	}
+        }
+        
+        tutorial2.equations.push(nline);
+        var context = '';
+        if (tutorial2.equations.length>0) {
+        	context = 'let {'+ tutorial2.equations.join(';') +' } in '+retval2;//'True';
+        }
+//        alert(context);
+        line = context;                
+        return [false,line];
+    	
     } else {
         // OK, an expression that is not an equation
+    	
         line = 'let {'+ tutorial2.equations.join(';') +' } in '+line.trim();
+//        alert(line);
     }
     return [false,line];
 };
@@ -227,9 +315,28 @@ tutorial2.ajaxCommand = function(line,report,stdin){
                 tutorial2.controller.continuedPrompt = false;
             } else {
                 if(result.error !== undefined){
+//                	alert('ERROR:'+result.error);
+                	if (/No\ instance\ for\ .Typeable/.test(result.error)) {
+//                		alert(args.exp);
+                		tutorial2.continueOnError=true;
+                		result.error = ":: ? -> ?";
+                	} else
+                	if (/No\ instance\ for\ .Show/.test(result.error)) {
+//                		alert(result.error);
+//                		tutorial2.continueOnError=true;
+                		result.error = "Sorry, I can't display this result.";
+                	}
+//                	else
+//                		if (/No\ instance\ for\ ./.test(result.error)) {
+//                    		tutorial2.continueOnError=true;
+//                    		result.error = ":: Expr";
+//                    	}
+//                	if (/Could\ not\ deduce\ .Ord/.test(result.error)) {
+//                		
+//                	}
 // A type error goes here,
 // What I want is the option to carry on
-                    result.expr = args.exp                    
+                    result.expr = args.exp;                    
                     if (tutorial2.continueOnError) {
                         if(tutorial2.successHook != null) {
                             tutorial2.successHook(result);
@@ -310,6 +417,19 @@ tutorial2.setPage = function(n,result){
     }
 };
 
+
+//Set the current page.
+tutorial2.reset = function(){
+   
+        // Update the current page content
+        var guide = $('#guide');
+  
+        tutorial2.makeGuidSamplesClickable();
+        // Update the location anchor  
+            window.location = '/tutorial2/';            
+};
+
+
 // Make the code examples in the guide clickable so that they're
 // inserted into the console.
 tutorial2.makeGuidSamplesClickable = function() {
@@ -322,6 +442,19 @@ tutorial2.makeGuidSamplesClickable = function() {
             tutorial2.controller.inner.click();
         });
     });
+    $('span.code').each(function(){
+    	
+        $(this).css('cursor','pointer');
+        
+//        $(this).attr('title','Click me to insert "' +
+//                     $(this).text() + '" into the console.');
+        $(this).click(function(){
+//        	$(this).css('color','blue');
+            tutorial2.controller.promptText($(this).attr('data-step'));            
+            tutorial2.controller.inner.click();            
+        });
+    });
+    
 }
 
 // Display the currently active users

@@ -110,24 +110,31 @@ tutorial23.preCommandHook = function(line,report){
         }
         report();
         return [true,'True'];
-    } else if (line.trim() == 'help' || line.trim() == 'start' ) {
-        tutorial23.setPage(2,null);
+    } else if (line.trim() == 'start' ) {
+        tutorial23.setPage(1,null);
+        report();
+        return [true,'True'];                
+    } else if (line.trim() == 'help' ) {
+        tutorial23.setPage(tutorial23.pages.list.length,null);
         report();
         return [true,'True'];
     } else if (/^undo/.test(line.trim()) ) {
-        tutorial23.undo();
+//        tutorial23.undo();
         report();        
         return [true,'True'];
     } else if (/^forget/.test(line.trim()) ) {
-        var chunks = line.trim().split(/\s+/);
-        var varname = chunks[1];
-        tutorial23.forget(varname);
+//        var chunks = line.trim().split(/\s+/);
+//        var varname = chunks[1];
+//        tutorial23.forget(varname);
         report();
         return [true,'True'];
     }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
-    	// This is an equation.     	
+    	// This is an equation. 
+    	// No context, no checks!
+    	/*
         var nline = line.trim();
         tutorial23.isEq = true;
+        
         tutorial23.equations.push(nline);
         var context = '';
         if (tutorial23.equations.length>0) {
@@ -140,17 +147,11 @@ tutorial23.preCommandHook = function(line,report){
          // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
          var isLambda = false;
          if (/\\/.test(rhs)) {
-        	 isLambda = true;      
-        	 alert("LAMBDA:"+rhs)
+        	 isLambda = true;              	
          }
-         //lhs.replace(/\W+/g,'');
-         //rhs.replace(/\W+/g,'');
-//         alert('PRE:<'+lhs+'><'+rhs+'>');
-         // This is a naive check for recursion, we ignore the context
-         
+         // This is a naive check for recursion, we ignore the context         
          var re = new RegExp('\\b'+lhs+'\\b');
          if (re.test(rhs)) {
-//        	 alert('Recursion!');
              tutorial23.equations.pop();
              tutorial23.isEq = false;
              line = 'let '+nline+' in '+lhs;
@@ -161,11 +162,13 @@ tutorial23.preCommandHook = function(line,report){
         	 line = context + '"'+rhs+'"';
              }
          }
+    	 */         
         return [false,line];
-    } else {
+    } //else {
         // OK, an expression that is not an equation
-        line = 'let {'+ tutorial23.equations.join(';') +' } in '+line.trim();
-    }
+//        line = 'let {'+ tutorial23.equations.join(';') +' } in '+line.trim();
+    //}
+    
     return [false,line];
 };
 
