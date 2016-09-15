@@ -24,33 +24,6 @@ tutorial23.io = null;
 // WV extensions for HaskellMOOC
 // Allow continue on error
 tutorial23.continueOnError = false;
-// Handle context for equations
-tutorial23.equations=[];
-tutorial23.isEq = false;
-tutorial23.forget = function(varname) {
-//	alert('FORGET');
-	var remaining_eqs = [];
-         for (var i = 0; i <  tutorial23.equations.length; i++) {
-             var eq = tutorial23.equations[i];
-             var chunks = eq.split(/\s*=\s*/);
-             var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!             
-//             alert('<'+lhs+'><'+varname+'>');
-             varre = new RegExp('\\b'+varname+'\\b');
-             if (!varre.test(lhs)) {
-//            	 alert('Pushing '+eq);
-            	 remaining_eqs.push(tutorial23.equations[i]);
-             }
-         }
-         tutorial23.equations=remaining_eqs;
-//         alert(varname+" => "+tutorial23.equations);
-}
-
-tutorial23.undo  = function() {
-//    if (tutorial23.isEq) {
-     tutorial23.equations.pop();
-//    }
-}
-
 
 // Files in the file system.
 tutorial23.files = {
@@ -118,57 +91,7 @@ tutorial23.preCommandHook = function(line,report){
         tutorial23.setPage(tutorial23.pages.list.length,null);
         report();
         return [true,'True'];
-    } else if (/^undo/.test(line.trim()) ) {
-//        tutorial23.undo();
-        report();        
-        return [true,'True'];
-    } else if (/^forget/.test(line.trim()) ) {
-//        var chunks = line.trim().split(/\s+/);
-//        var varname = chunks[1];
-//        tutorial23.forget(varname);
-        report();
-        return [true,'True'];
-    }  else if (!/^let/.test( line.trim() ) && /^\w+(\s+\w+)*\s*=[^=\>\<]/.test( line.trim() ) ) {
-    	// This is an equation. 
-    	// No context, no checks!
-    	/*
-        var nline = line.trim();
-        tutorial23.isEq = true;
-        
-        tutorial23.equations.push(nline);
-        var context = '';
-        if (tutorial23.equations.length>0) {
-        	context = 'let {'+ tutorial23.equations.join(';') +' } in ';
-        }
-         var chunks = nline.split(/\s+=\s+/);
-         var lhs = chunks[0];
-         var rhs=chunks[1];
-         // Now, if the rhs is a lambda we should not return the lhs
-         // This is weak, because if I bind a lambda to f and then bind f to g, I'm still in trouble
-         var isLambda = false;
-         if (/\\/.test(rhs)) {
-        	 isLambda = true;              	
-         }
-         // This is a naive check for recursion, we ignore the context         
-         var re = new RegExp('\\b'+lhs+'\\b');
-         if (re.test(rhs)) {
-             tutorial23.equations.pop();
-             tutorial23.isEq = false;
-             line = 'let '+nline+' in '+lhs;
-         } else {
-             if (!isLambda) {
-		 line = context + lhs;
-             } else {
-        	 line = context + '"'+rhs+'"';
-             }
-         }
-    	 */         
-        return [false,line];
-    } //else {
-        // OK, an expression that is not an equation
-//        line = 'let {'+ tutorial23.equations.join(';') +' } in '+line.trim();
-    //}
-    
+    }     
     return [false,line];
 };
 
@@ -253,15 +176,14 @@ tutorial23.ajaxCommand = function(line,report,stdin){
                     if(tutorial23.successHook != null) {
                         tutorial23.successHook(result);
                     }
-                    if(result.type !== 'IO ()' && !result.value.match(/^</))
+                    if(result.type !== 'IO ()' && !result.value.match(/^</)) {
                         msgs.push({ msg: result.value, className: 'jquery-console-value' });
+                    }    
                     msgs.push({ msg: ':: ' + result.type, className: 'jquery-console-type' });
                     report(msgs);
                     tutorial23.files = result.files;
                 }
-                if (tutorial23.continueOnError) {
- // nothing                        
-                } else {
+                if (!tutorial23.continueOnError) {
                     tutorial23.io = null;
                     tutorial23.stdout = [];
                     tutorial23.stdin = [];
