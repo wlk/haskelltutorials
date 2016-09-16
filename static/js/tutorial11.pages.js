@@ -270,7 +270,7 @@ tutorial11.pages.list =
               msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
             }
             return msg+'<p>'+
-            "To combine functions you need to know their precedence. In Haskel this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
+            "To combine functions you need to know their precedence. In Haskell this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
             +'</p>';
         }
         },
