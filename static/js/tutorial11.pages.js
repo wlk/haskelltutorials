@@ -441,7 +441,7 @@ return msg;
   },
   guide:function(result){
 	  if(/Conflicting/.test(result.error)) {
-    var msg="<p>As you can see, you get an error 'Conflicting assignments'</p>" +
+    var msg="<p>As you can see, you get an error 'Conflicting definitions'</p>" +
     		"<p>Reassignment is not allowed, variables are what is called 'immutable'.</p>" +
     		"<p>This is a very important property because it means that you can always, anywhere in a program, replace a variable with its corresponding expression.</p>" +
     		"<p>Please type <code>next</code> to continue to the recap page.</p>";
