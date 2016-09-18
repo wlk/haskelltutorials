@@ -60,7 +60,7 @@ tutorial22.pages.list =
          title:'Boolean Negation',
          guide:
          '<h3>Boolean Negation</h3>'
-         + "<p>Boolean values are either True or False. True is the opposite of False, and vice verse. The not function returns the opposite boolean value, the logical complement. Try <code>not True</code></p>"
+         + "<p>Boolean values are either True or False. True is the opposite of False, and vice versa. The not function returns the opposite boolean value, the logical complement. Try <code>not True</code></p>"
         },
         {
           trigger:tutorial22.pages.isBool, 
@@ -255,9 +255,9 @@ tutorial22.pages.list =
 	    		"<p>Well done, you finished another Haskell tutorial!.</p>" +
 	    		"<p>Let's recap what we've just discovered:</p>" +
 	            '<ul>'+
-	            '<li>Equality and Comparison Operators</li>' +
-		    '<li>Testing List membership with the elem function</li>' +
-                    '<li>Using infix and prefix operations.</li>' +
+	            '<li>Boolean not, &amp;&amp; and || operations</li>' +
+		    '<li>Boolean functions on lists</li>' +
+                    '<li>if/then/else conditional expressions</li>' +
 	            '</ul></p>';
 
 	    return msg;
