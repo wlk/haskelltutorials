@@ -47,7 +47,7 @@ tutorial22.pages.list =
          guide:
          
          '<h3>Tutorial 2.2: More Boolean Operations</h3>' +
-         '<p>We are going to look at some more boolean operations today.</p>'+
+         '<p>We are going to look at further operations on boolean values in this session.</p>'+
          '<p>To start the tutorial type <code>next</code> at the <span style="color: purple">&#955;</span> prompt.</p>' +
          '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>' 
          
