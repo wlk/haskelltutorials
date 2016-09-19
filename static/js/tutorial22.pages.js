@@ -47,7 +47,7 @@ tutorial22.pages.list =
          guide:
          
          '<h3>Tutorial 2.2: More Boolean Operations</h3>' +
-         '<p>We are going to look at some more boolean operations today.</p>'+
+         '<p>We are going to look at further operations on boolean values in this session.</p>'+
          '<p>To start the tutorial type <code>next</code> at the <span style="color: purple">&#955;</span> prompt.</p>' +
          '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>' 
          
@@ -60,7 +60,7 @@ tutorial22.pages.list =
          title:'Boolean Negation',
          guide:
          '<h3>Boolean Negation</h3>'
-         + "<p>Boolean values are either True or False. True is the opposite of False, and vice verse. The not function returns the opposite boolean value, the logical complement. Try <code>not True</code></p>"
+         + "<p>Boolean values are either True or False. True is the opposite of False, and vice versa. The not function returns the opposite boolean value, the logical complement. Try <code>not True</code></p>"
         },
         {
           trigger:tutorial22.pages.isBool, 
@@ -96,7 +96,7 @@ tutorial22.pages.list =
          title:'Boolean And',
          trigger:function(result){
 	   bracketError = /applied\s+to\s+two\s+arguments/.test(result.error);
-	   booleanResult = result.type == "Bool";
+	   booleanResult = result.type === "Bool";
            return bracketError || booleanResult;
 	 },
          guide:function(result){
@@ -104,160 +104,187 @@ tutorial22.pages.list =
 	   if (/applied\s+to\s+two\s+arguments/.test(result.error)) {
 	       msg = msg + "<p>Remember to use brackets round the innermost not function call, since this must be evaluated first: <code>not (not True)</code></p>."
 	   }
+           else {
+               msg = msg +  "<p>You got back the boolean value "+result.value+" as expected.</p>";
+           }
            var next_step =
             "<h3>The And operator</h3>"
-            +"<p>Use the && infix operator as a boolean And. This only evaluates to True when both its inputs are True."
-            +"e.g. <code>True && True</code>. </p>";
+            +"<p>Use the && infix operator as a boolean conjunction (AND function). This only evaluates to True when both its inputs are True."
+            +"i.e. <code>True && True</code>. </p>";
 	   return msg + next_step;
 	 }
         },
 
-   // FIXME - need a custom trigger to check we did an AND
-        
-        // Expression Syntax - cont'd
         {
-         trigger:tutorial22.pages.isBool,
-          guide:function(result){
-	      tutorial22.continueOnError = true;
-            return "<p>You can apply these operations to other data types. Try comparing two Strings for equality, e.g. <code>\"hello\" == \"hola\"</code>.</p>";
-          }
-        },
-
-	{
-	 // this is a complex trigger - looking for an error or a correctly typed result!
-         trigger:function(result) {
-	     variableError = /^Not\s+in\s+scope/.test(result.error)
-	     missingQuoteError = /lexical\s+error\s+in\s+string/.test(result.error)
-	     booleanResult = result.type == "Bool";
-	     return variableError || missingQuoteError || booleanResult
-	 },
+         trigger:function(result){
+             // user did &&, result is boolean True
+             andFunction = /\&\&/.test(result.expr);
+	     booleanResult = result.type === "Bool";
+             trueResult =  /True/.test(result.value);
+             return andFunction && booleanResult && trueResult;
+         },
          guide:function(result){
-	     msg = "";
-	     if (/^Not\s+in\s+scope/.test(result.error)) {
-		 msg = "<p>Did you forget to use double quotes \" \" around your strings? If so, Haskell thinks that you are referring to named values (like program variables)???"
-	     }
-	     if (/lexical\s+error\s+in\s+string/.test(result.error)) {
-		 msg = "<p>Did you forget a double quote \" at the beginning or end of one of your strings?"
-	     }
-             tutorial22.continueOnError = false;
-             return   msg + "<p> Now try String inequality <code>\"foo\" /= \"bar\"</code></p>";
+             var msg = "<p>You got back the result " + result.value + " as expected.</p>";
+             var next_step = "<p>Now try evaluating an AND expression where one of the inputs is False, e.g. <code>False && True</code>. What will the output value be?</p>";
+             return msg + next_step;
          }
         },
 
+	{
+         trigger:function(result) {
+             // user did &&, result is boolean False
+             andFunction = /\&\&/.test(result.expr);
+	     booleanResult = result.type === "Bool";
+             falseResult =  /False/.test(result.value);
+             return andFunction && booleanResult && falseResult;
+	 },
+         guide:function(result){
+             var msg = "<p>You got back the result " + result.value + " as expected.</p>";
+             var next_step = "<h3>The Or operator</h3>"
+             + "<p>Boolean disjunction (logical OR) is the dual of the AND operation. In Haskell, use the infix || operator for OR. When at least one of the inputs is True, then the output of OR will be True. Try <code>True || False</code>.</p>";
+             return msg + next_step;
+         }
+        },
+
+	{
+         trigger:function(result) {
+             // user did ||, result is boolean True
+             orFunction = /\|\|/.test(result.expr);
+	     booleanResult = result.type === "Bool";
+             orResult =  /True/.test(result.value);
+             return orFunction && booleanResult && orResult;
+	 },
+         guide:function(result){
+             var msg = "<p>You got back the result " + result.value + " as expected.</p>";
+             var next_step = "<p>When both of the inputs are False, then the output of OR will be False. Try <code>False || False</code>.</p>";
+             return msg + next_step;
+         }
+        },
+
+	{
+         trigger:function(result) {
+             // user did ||, result is boolean False
+             orFunction = /\|\|/.test(result.expr);
+	     booleanResult = result.type === "Bool";
+             orResult =  /False/.test(result.value);
+             return orFunction && booleanResult && orResult;
+	 },
+         guide:function(result){
+             var msg = "<p>You got back the result " + result.value + " as expected.</p>";
+             var next_step = "<h3>Exclusive OR</h3>"
+                 + "<p>Haskell also defines the xor function, which returns true when its two boolean arguments are different (one is True and the other is False). Try <code>True `xor` False</code>. (Notice that we specify xor as an infix function with the backquotes here.)</p>";
+             return msg + next_step;
+         }
+        },
+        
+        
         {
-         trigger:tutorial22.pages.isBool,
-          guide:function(result){
-            return "<p>You can apply these operations to other data types. You might also try comparing two Bools directly, e.g. <code>True /= False</code>.</p>";
+         trigger:function(result) {
+             // user did xor, result is boolean False
+             xorFunction = /xor/.test(result.expr);
+	     booleanResult = result.type === "Bool";
+             xorResult =  /True/.test(result.value);
+             return xorFunction && booleanResult && xorResult;
+	 },
+         guide:function(result){
+            return "<p>It's straightforward to enumerate the full truth table for two-input boolean functions. We could use a list comprehension expression to enumerate the input values: <code>[(x,y) | x<-[False, True], y<-[False, True]]</code>. Then we could map the boolean function over these input values (extracted from the pairs). For instance, here are the enumerated output values for the xor function: <code>map (\\inputs -> xor (fst inputs) (snd inputs)) [(x,y) | x<-[False, True], y<-[False, True]]</code>.</p>";
           }
         },
 
-        
-        
-        // Expression Syntax - cont'd
         {
-          trigger:tutorial22.pages.isBool,
-          guide:function(result){
-            if (!result) result = {expr:'True/=False',value:'True'};
-            var complied = /Bool/.test(result.type);            
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /True|False/.test(rexpr);
-            
-            var msg="";
-            if (valid) {
-                msg="<p>So this expression returned "+result.value+", illustrating the use of the equality test operator.</p>";
-            } 
+         trigger:function(result) {
+             // user did map, result is a boolean list
+             mapFunction = /map/.test(result.expr);
+	     boolListResult = result.type === "[Bool]";
+             return mapFunction && boolListResult;
+	 },
+         guide:function(result){
+             return "<h3>Logic Operations with More Inputs</h3>"
+                 + "<p>Sometimes, boolean logic functions like AND and OR have more than two inputs. Haskell supports these multi-input boolean operations with and and or functions that take a list of boolean values as a single input. Effectively, this is a fold of the && or || operator over the input list of boolean values.</p>"
+                 + "<p>Try <code>and [False, True, False, True]</code> or <code>or [True, True, False]</code>, for instance.</p>";
+          }
+        },
+
+        {
+         trigger:function(result) {
+             // user did and or or, result is a boolean
+             logicFunction = (/and/.test(result.expr)) || (/or/.test(result.expr));
+	     booleanResult = result.type === "Bool";
+             return logicFunction && booleanResult;
+	 },
+         guide:function(result){
+             var msg = "<p>You got back the result " + result.value + " as expected.</p>";
+             var next_step = "<h3>if Expressions</h3>"
+                 + "<p>You might be used to <tt>if</tt> statements in imperative programming languages. Haskell has <tt>if</tt> expressions, which evaluate to either the <tt>then</tt> value or the <tt>else</tt> value, based on the <tt>if</tt> value.</p> Try <code>if 2*2==4 then &quot;happy&quot; else &quot;sad&quot;</code>.</p>"
+             return msg + next_step;
+          }
+        },
+
+        // lots of detail on if Expressions now
+        {
+         trigger:function(result){
+             // result is String
+             // expression contains if
+             var stringResult =
+                 (result.type === "String") ||
+                 (result.type === "[Char]");
+             var ifExpr = /if/.test(result.expr);
+             return stringResult && ifExpr;
+         },
+         guide:function(result){
+            var msg = "<p>This if expression returned "+result.value+", as you might expect.</p>";
             var next_step =
-		  "<p>Now, what happens if you try to compare two values with different types? e.g. <code>True == 1</code>.";
+		"<p>The Haskell if expression is equivalent to the <tt>?:</tt> ternary operator in C-like languages. The first subexpression (after the if) must have type Bool, then the subsequent two subexpressions (after then and else respectively) must have the same type as each other.</p>"
+                + "<p>What happens if we supply a non-Boolean value for the first subexpression? Trye <code>if 1 then 0 else -1</code>.</p>";
 	      tutorial22.continueOnError = true;
             return msg+next_step;
           }
         },
 
-        // Expression Syntax - Corner cases 2
+        // if expr, type error
         {
           trigger:function(result){
 	      var typeError =
 		  (/^\s+Couldn\'t\s+match\s+expected\s+type/.test(result.error)) || 
-		  (/^\s+No\s+instance\s+for/.test(result.error));
+		  (/^\s+No\s+instance\s+for/.test(result.error)) ||
+                  (/^\s+Could\s+not\s+deduce/.test(result.error));
               return typeError;
           },
           guide:function(result){
-          tutorial22.continueOnError = false;
-          return   "<p>As you can see, this equality test fails:  Haskell cannot compare two values that have <em>different types</em>. The full story is more complex, but for now, we can see that types <em>limit</em> the operations we can apply to particular values.</p>" +
-		  "<p>Haskell supports the standard comparison/relational operators, <, <=, >, >=. Try a simple comparison, e.g. <code>10 &gt; 9</p>";
-        }
-        },
-
-        // Expression Syntax - Corner cases 3
-        {
-          trigger:tutorial22.pages.isBool,
-          guide:function(result){
-          return  "<p>Note that relational operators also work on lists, in a dictionary-order manner (lexicographic). e.g. Try <code>[1,2,3] &lt; [1,2,3,4]</p>";
-        }
-        },
-
-	{
-	  trigger:tutorial22.pages.isBool,
-	  guide:function(result) {
-	    return "<p> Since strings are lists of characters in Haskell, we can do the same kinds of comparison operations on strings. Check whether Aadvark comes before Aaronic in the dictionary with this code: <code>&quot;Aardvark&quot; &lt; &quot;Aaronic&quot;";
-	  }
-	},
-// should we talk about string comparisons, 
-// about Eq class?
-
-        {
-          trigger:tutorial22.pages.isBool,
-          guide:function(result){
-          tutorial22.continueOnError = false;
-          var next_step = "<p>Now let's think about list membership. We want a boolean function that returns true if a value is part of a list, and false otherwise. This is the elem function. Try <code>elem 1 [1,2,3]</code></p>";
-              return next_step;
-	}
-        },
-
-	{
-	  trigger:tutorial22.pages.isBool,
-	  guide:function(result){
-            if (!result) result = {expr:'elem 1 [1,2,3]',value:'True'};
-            var complied = /Bool/.test(result.type);            
-            var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-            var valid = /True|False/.test(result.value);
-            var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
-	    var element = matches[1];
-            var msg="<p>You see that element " + element + " is " + ((result.value)?"":" not ") + "part of the list.</p>";
-	    var next_step = msg + "<p>The elem function can be written infix, like an arithmetic operator, by enclosing its name in backquotes ``. Try <code>3 `elem` [1, 2, 3, 4, 5]</code>."
-            return next_step;
-	      
-	}
-	},
-	{
-	  trigger:tutorial22.pages.isBool,
-	  guide:function(result){
-	      var next_step ="<p>In fact, Haskell permits any two-argument function to be written as an infix operator using backquote characters. For a further example, try the max function as an infix operator: <code>42 `max` 13</code>";
-	      return next_step;
+              tutorial22.continueOnError = true;
+              return   "<p>As you can see, this if expression fails to evaluate. Haskell tries to interpret the first subexpression as a Bool value, and fails.</p><p>There are other ways to have typing issues with if expressions, for instance when the then and else subexpressions have different types. Try <code>if False then 42 else &quot;foo&quot;</code>.</p>";
           }
         },
 
-	{
-	  trigger:tutorial22.pages.isNum,
-	  guide:function(result){
-	      var next_step = "<p>Also note that any Haskell infix operator, e.g. +, can be written as a prefix operator by enclosing it in parentheses, like <code>(+) 1 1</code>";
-	      return next_step;
-	  }
-	},
+        // then/else expr, type error
+        {
+          trigger:function(result){
+	      var typeError =
+		  (/^\s+Couldn\'t\s+match\s+expected\s+type/.test(result.error)) || 
+		  (/^\s+No\s+instance\s+for/.test(result.error)) ||
+                  (/^\s+Could\s+not\s+deduce/.test(result.error));
+              return typeError;
+          },
+          guide:function(result){
+              tutorial22.continueOnError = false;
+              return "<p>Once again, this if expression fails to evaluate because of type errors. Haskell detects that the then value and the else value have incompatible types, so it complains.</p>"
+                  + "<p>It is possible to have two values that are <i>similar</i>, i.e. they could be specialized to the same type, based on their type classes. For instance, try <code>if True then 42 else pi</code>.</p>";
+          }
+        },
 
-{
+        {
 	  trigger:function(result){
 	    return true;
 	  },
 	  guide:function(result){
 		  
 	    var msg="<h3>And that's the end of Tutorial 2.2!</h3>" +
-	    		"<p>Well done, you finished another Haskell tutorial!.</p>" +
+	    		"<p>Well done, you have completed another Haskell tutorial!.</p>" +
 	    		"<p>Let's recap what we've just discovered:</p>" +
 	            '<ul>'+
-	            '<li>Equality and Comparison Operators</li>' +
-		    '<li>Testing List membership with the elem function</li>' +
-                    '<li>Using infix and prefix operations.</li>' +
+	            '<li>Boolean not, &amp;&amp;,||  and xor operations</li>' +
+		    '<li>Boolean functions on lists</li>' +
+                    '<li>if/then/else conditional expressions</li>' +
 	            '</ul></p>';
 
 	    return msg;

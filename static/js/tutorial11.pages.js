@@ -270,7 +270,7 @@ tutorial11.pages.list =
               msg = "<p>What you typed was not what I expected, hope you got what you wanted.</p>";
             }
             return msg+'<p>'+
-            "To combine functions you need to know their precedence. In Haskel this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
+            "To combine functions you need to know their precedence. In Haskell this is simple: Function application binds tighter than anything else. For example, try <code>sqrt 9+7</code>."
             +'</p>';
         }
         },
@@ -343,7 +343,7 @@ msg = "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 argum
                 } else if (/min\s+max\s+\d+\s+\d+\s+\d+/.test(rexpr) ) {
                     msg ="That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments. You need parentheses around the inner function call, e.g. <code>min (max 3 4) 5</code>.";
                 } else if (/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
+                    msg = "Well done, putting parentheses around the inner function call identifies it as a separate expression.";
                 } else if (/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(rexpr)) {
                     msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
                 } else {
@@ -441,7 +441,7 @@ return msg;
   },
   guide:function(result){
 	  if(/Conflicting/.test(result.error)) {
-    var msg="<p>As you can see, you get an error 'Conflicting assignments'</p>" +
+    var msg="<p>As you can see, you get an error 'Conflicting definitions'</p>" +
     		"<p>Reassignment is not allowed, variables are what is called 'immutable'.</p>" +
     		"<p>This is a very important property because it means that you can always, anywhere in a program, replace a variable with its corresponding expression.</p>" +
     		"<p>Please type <code>next</code> to continue to the recap page.</p>";

@@ -68,7 +68,7 @@ tutorial32.pages.list =
         {title:'Tutorial 3.2: More Computations on Lists',
          guide:
          '<h3>Tutorial 3.2: More Computations on Lists</h3>' +
-         '<p>This tutorial introduces some more advanced compututations with lists. \
+         '<p>This tutorial introduces some more advanced computations with lists. \
          You will learn how to create and use recursive functions to traverse lists.</p>'+
          '<p>Type <code>next</code> at the <span style="color: purple">&#955;</span> prompt to start the first section of the tutorial.</p>' +         
          '<p>This tutorial consists of the following sections:</p>'+
