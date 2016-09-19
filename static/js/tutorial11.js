@@ -36,10 +36,10 @@ tutorial11.has_eq = function(varname) {
     	
         var chunks = eq.split(/\s*=\s*/);
         var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!
-        alert(eq+':'+varname+'<>'+lhs);
+        //alert(eq+':'+varname+'<>'+lhs);
         varre = new RegExp('\\b'+varname+'\\b');
         if (varre.test(lhs)) {
-        	alert('Found '+varname);
+        	//alert('Found '+varname);
        	 	has_varname=true;
        	 	break;
         }
@@ -56,7 +56,7 @@ tutorial11.forget = function(varname) {
              if (!varre.test(lhs)) {
             	 remaining_eqs.push(tutorial11.equations[i]);
              } else {
-            	 alert('Forgetting '+varname);
+            	 //alert('Forgetting '+varname);
              }
          }
          tutorial11.equations=remaining_eqs;
@@ -154,7 +154,7 @@ tutorial11.preCommandHook = function(line,report){
         return [true,'True'];
     } else if (/^(context|show)/.test(line.trim()) ) {        
         report();     
-        alert('{ '+ tutorial11.equations.join(';') +' }');
+        //alert('{ '+ tutorial11.equations.join(';') +' }');
         return [true,'True'];        
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
@@ -176,9 +176,9 @@ tutorial11.preCommandHook = function(line,report){
         var rhs=chunks[1];
         
         tutorial11.isEq = true;
-        if (tutorial11.equations.length>0) {alert( 'test dups'+lhs );
+        if (tutorial11.equations.length>0) {//alert( 'test dups'+lhs );
         	if (tutorial11.has_eq(lhs)) {        	
-        		tutorial11.forget(lhs);
+        		//tutorial11.forget(lhs);
         	}
         }
         tutorial11.equations.push(nline);
@@ -233,7 +233,7 @@ tutorial11.preCommandHook = function(line,report){
         tutorial11.isEq = true;
         var chunks=nline.split(/\s*=\s*/);
         var lhs = chunks[0].trim();
-        if (tutorial11.equations.length>0) {alert( 'test dups <'+lhs+'>' );
+        if (tutorial11.equations.length>0) {//alert( 'test dups <'+lhs+'>' );
         	if (tutorial11.has_eq(lhs)) {        	
         		tutorial11.forget(lhs);
         	}

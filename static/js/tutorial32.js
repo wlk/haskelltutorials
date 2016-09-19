@@ -36,10 +36,10 @@ tutorial32.has_eq = function(varname) {
     	
         var chunks = eq.split(/\s*=\s*/);
         var lhs = chunks[0].trim(); // WV: but somehow there is still a trailing whitespace char after the varname in lhs!
-        alert(eq+':'+varname+'<>'+lhs);
+        //alert(eq+':'+varname+'<>'+lhs);
         varre = new RegExp('\\b'+varname+'\\b');
         if (varre.test(lhs)) {
-        	alert('Found '+varname);
+        	//alert('Found '+varname);
        	 	has_varname=true;
        	 	break;
         }
@@ -56,7 +56,7 @@ tutorial32.forget = function(varname) {
              if (!varre.test(lhs)) {
             	 remaining_eqs.push(tutorial32.equations[i]);
              } else {
-            	 alert('Forgetting '+varname);
+            	 //alert('Forgetting '+varname);
              }
          }
          tutorial32.equations=remaining_eqs;
@@ -154,7 +154,7 @@ tutorial32.preCommandHook = function(line,report){
         return [true,'True'];
     } else if (/^(context|show)/.test(line.trim()) ) {        
         report();     
-        alert('{ '+ tutorial32.equations.join(';') +' }');
+        //alert('{ '+ tutorial32.equations.join(';') +' }');
         return [true,'True'];        
     } else if (/^forget/.test(line.trim()) ) {
         var chunks = line.trim().split(/\s+/);
@@ -176,7 +176,7 @@ tutorial32.preCommandHook = function(line,report){
         var rhs=chunks[1];
         
         tutorial32.isEq = true;
-        if (tutorial32.equations.length>0) {alert( 'test dups'+lhs );
+        if (tutorial32.equations.length>0) {//alert( 'test dups'+lhs );
         	if (tutorial32.has_eq(lhs)) {        	
         		tutorial32.forget(lhs);
         	}
@@ -233,7 +233,7 @@ tutorial32.preCommandHook = function(line,report){
         tutorial32.isEq = true;
         var chunks=nline.split(/\s*=\s*/);
         var lhs = chunks[0].trim();
-        if (tutorial32.equations.length>0) {alert( 'test dups <'+lhs+'>' );
+        if (tutorial32.equations.length>0) {//alert( 'test dups <'+lhs+'>' );
         	if (tutorial32.has_eq(lhs)) {        	
         		tutorial32.forget(lhs);
         	}

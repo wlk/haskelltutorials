@@ -397,7 +397,7 @@ return next_step;
 
  {
             trigger:function(result){
-            	alert(result.error);
+            	//alert(result.error);
                 return /index\ too\ large/.test(result.error);
             },
           guide:function(result){

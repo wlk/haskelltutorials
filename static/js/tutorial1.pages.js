@@ -347,7 +347,7 @@ tutorial1.pages.list =
     {
       trigger:function(result){
     	  var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
-    	  alert(rexpr);
+    	  //alert(rexpr);
         // This can generate an error, we should test here against the actual expressions not the results
 var retval = /m(in|ax)\s+\d+\s+m(in|ax)\s+\d+\s+\d+/.test(rexpr) ||
 /m(in|ax)\s+m(in|ax)\s+\d+\s+\d+\s+\d+/.test(rexpr) ||
