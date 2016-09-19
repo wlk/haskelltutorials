@@ -55,7 +55,7 @@ tutorial23.pages.list =
          guide:
          '<div class="indent">' +
          '<h3>Tutorial 2.3: Input/Output Operations</h3>' +
-         '<p>We are going to explore how to do simple string-based input/output operations today.</p>'+
+         '<p>We are going to explore how to do simple string-based input/output operations in this session.</p>'+
          '<p>To go to the next step in the tutorial use <code>next</code>, to go back use <code>back</code>.</p>' +
          '</div>'+
          '<p>For help about the tutorial environment type <code>help</code> at the <span style="color: purple">&#955;</span> prompt.</p>'
@@ -68,7 +68,7 @@ tutorial23.pages.list =
          title:'Printing Strings',
          guide:
          '<h3>Printing Strings</h3>'
-         + "<p>The Haskell function to print a character string to the terminal is putStrLn (like println in Java or print in Python). Try printing a simple message like: <code>putStrLn &quot;hello world&quot;</code></p>"
+         + "<p>The Haskell function to print a character string to the terminal is called <tt>putStrLn</tt> (like <tt>println</tt> in Java or <tt>print</tt> in Python). Try printing a simple message like: <code>putStrLn &quot;hello world&quot;</code></p>"
         },
         {
           trigger:function(result){
@@ -76,9 +76,21 @@ tutorial23.pages.list =
             return correctResult;
           },
           guide:function(result){
-            msg = "<p>See how the string has been printed in the console window on the left?</p>";
-            tutorial23.continueOnError = true;
-	    var next_step = "<p>Now let's read in a character string from user input, this is like sscanf in C or input in Python. Call the <code>getLine</code> function, then type in some text followed by pressing the enter key</p>";
+              var msg = "<p>See how the string has been printed in the console window on the left?</p>";
+              tutorial23.continueOnError = false;
+	      var next_step = "<p>You can concatenate several strings with the <tt>++</tt> operator, and print out one long string -- make sure you put brackets around the code so <tt>putStrLn</tt> prints the entire string. For instance, try <code>putStrLn (&quot;good &quot; ++ &quot;morning&quot; ++ &quot; everyone&quot;)</code>.</p>";
+	    return msg + next_step;
+          }
+        },
+        {
+          trigger:function(result){
+            correctResult = result.type == "IO ()";
+            return correctResult;
+          },
+          guide:function(reasult){
+            var msg = "<p>This concatenated string has also been printed in the console window on the left.</p>";
+            tutorial23.continueOnError = false;
+	    var next_step = "<p>Now let's read in a character string from user input, this is like <tt>sscanf</tt> in C or <tt>input</tt> in Python. Call the <code>getLine</code> function, then type in some text at the <tt>&gt;</tt> prompt followed by pressing the enter key</p>";
 	    return msg + next_step;
           }
         },
@@ -89,8 +101,8 @@ tutorial23.pages.list =
           },
           guide:function(result){
             msg = "<p>See how the string is returned as a result of the function call  in the console window on the left?</p>";
-            tutorial23.continueOnError = true;
-	    var next_step = "<p>Now let\'s chain together some input and output - with appropriate sequencing. We want to find the name of a person, then print out a personalized greeting. <code> do { putStrLn &quot;what is your name?&quot;; x <- getLine; putStrLn (&quot;hello &quot; ++ x) }</code></p>";
+            tutorial23.continueOnError = false;
+	    var next_step = "<p>Now let\'s chain together some input and output - with appropriate sequencing. We want to find the name of a person, then print out a personalized greeting. <code> do { putStrLn &quot;what is your name?&quot;; x <- getLine; putStrLn (&quot;hello &quot; ++ x) }</code>. The do block sequences IO actions.</p>";
 	    return msg + next_step;
           }
         },
@@ -100,9 +112,9 @@ tutorial23.pages.list =
             return correctResult;
           },
           guide:function(result){
-            msg = "As we have seen, you need to sequence IO operations with the <tt>do</tt> keyword. Values are bound to variables using the left arrow, called <em>bind</em>. You can't use the standard assignment (with the equals operator) for getLine, since it is an IO operation.";
+            var msg = "As we have seen, you can sequence IO operations with the <tt>do</tt> construct. Values are bound to variables using the left arrow. We could read this as <i>x gets a value from getLine</i>. Be aware that you can't use the standard assignment (with the equals operator) for getLine, since it is an IO operation.";
             
-            var next_step = "<p>Once we have got a value from getLine, and bound it to a variable, then we can do standard function calls on this value, and bind it to another variable - for instance, let's turn a name into upper case: <code>do { putStrLn &quot;what is your name?&quot;; n<-getLine; nUpper<-return (map toUpper n); <br/>putStrLn (&quot;HELLO &quot; ++ nUpper) }";
+            var next_step = "<p>Once we have got a value from getLine, and bound it to a variable, then we can do standard function calls on this value, and bind it to another variable -- for instance, let's turn a name into upper case: <code>do { putStrLn &quot;what is your name?&quot; n<-getLine; let nUpper = map toUpper n in putStrLn (&quot;HELLO &quot; ++ nUpper) }";
 	    return msg + next_step;
           }
         },
@@ -118,7 +130,7 @@ tutorial23.pages.list =
 
            var next_step =
             "<h3>The Read function</h3>"
-            +"<p>It is possible to read values as strings, and convert them into other types. This is like the atoi() function in C. Try <code>read &quot;42&quot; :: Int</code>. You need the <tt>::Int</tt> type annotation otherwise it is not clear what type of number is represented by the String.";
+            +"<p>It is possible to read values as strings, and convert them into other types. This is like the <tt>atoi</tt> function in C. Try <code>read &quot;42&quot; :: Int</code>. You need the <tt>::Int</tt> type annotation otherwise it is not clear what type of number the input String is meant to represent.";
 	   return msg + next_step;
 	 }
         },
@@ -126,7 +138,7 @@ tutorial23.pages.list =
         {
           trigger:tutorial23.pages.isInt,
           guide:function(result){
-	      tutorial23.continueOnError = true;
+	      tutorial23.continueOnError = false;
               var msg = "<p>See how the string is converted to an Int value?";
               var next_step = "<p>However 42 could also be a floating-point number, try <code> read &quot;42&quot;::Float</code>.";
             return msg + next_step;
