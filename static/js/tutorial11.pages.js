@@ -343,7 +343,7 @@ msg = "That doesn't work: Haskell thinks you're trying to apply 'min' to 4 argum
                 } else if (/min\s+max\s+\d+\s+\d+\s+\d+/.test(rexpr) ) {
                     msg ="That doesn't work: Haskell thinks you're trying to apply 'min' to 4 arguments. You need parentheses around the inner function call, e.g. <code>min (max 3 4) 5</code>.";
                 } else if (/min\s+\(\s*max\s+\d+\s+\d+\s*\)\s+\d+/.test(rexpr)) {
-                    msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
+                    msg = "Well done, putting parentheses around the inner function call identifies it as a separate expression.";
                 } else if (/min\s+\d+\s+\(\s*max\s+\d+\s+\d+\s*\)/.test(rexpr)) {
                     msg = "Well done, putting parentheses around the inner function call identifies it a a separate expression.";
                 } else {
