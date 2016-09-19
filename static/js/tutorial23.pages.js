@@ -114,7 +114,7 @@ tutorial23.pages.list =
           guide:function(result){
             var msg = "As we have seen, you can sequence IO operations with the <tt>do</tt> construct. Values are bound to variables using the left arrow. We could read this as <i>x gets a value from getLine</i>. Be aware that you can't use the standard assignment (with the equals operator) for getLine, since it is an IO operation.";
             
-            var next_step = "<p>Once we have got a value from getLine, and bound it to a variable, then we can do standard function calls on this value, and bind it to another variable -- for instance, let's turn a name into upper case: <code>do { putStrLn &quot;what is your name?&quot; n<-getLine; let nUpper = map toUpper n in putStrLn (&quot;HELLO &quot; ++ nUpper) }";
+            var next_step = "<p>Once we have got a value from getLine, and bound it to a variable, then we can do standard function calls on this value, and bind it to another variable -- for instance, let's turn a name into upper case: <code>do { putStrLn &quot;what is your name?&quot;; n<-getLine; let nUpper = map toUpper n in putStrLn (&quot;HELLO &quot; ++ nUpper) }";
 	    return msg + next_step;
           }
         },
