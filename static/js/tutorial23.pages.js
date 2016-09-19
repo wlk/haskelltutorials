@@ -191,7 +191,8 @@ tutorial23.pages.list =
 	    		"<p>Let's recap what we've discovered:</p>" +
 	            '<ul>'+
 	            '<li><tt>getLine</tt> and <tt>putStrLn</tt> for console input/output</li>' +
-		    '<li>using <tt>do</tt> and &lt;- for binding values to variables with IO</li>' +
+		    '<li>using <tt>do</tt> to sequence IO actions</li>' +
+                    '<li> &lt;- for binding values to variables with IO</li>' +
                     '<li>show and read for converting from and to <tt>String</tt> values</li>' +
 	            '</ul></p>';
 
