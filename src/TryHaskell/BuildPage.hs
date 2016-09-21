@@ -136,13 +136,4 @@ scripts =
      script_ [src_ "/static/js/jquery.console.js"] ""
      script_ [src_ "/static/js/tryhaskell.js"] ""
      script_ [src_ "/static/js/tryhaskell.pages.js"] ""
-     script_ "var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\");\
-              \document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\"));"
-     script_ "try {\
-              \var pageTracker2 = _gat._getTracker(\"UA-7443395-14\");\
-              \pageTracker2._setDomainName(\"none\");\
-              \pageTracker2._setAllowLinker(true);\
-              \pageTracker2._trackPageview(location.pathname + location.search + location.hash);\
-              \window.ga_tracker = pageTracker2;\
-              \} catch(err) {}"
          
