@@ -68,11 +68,6 @@ try {
     };
 } catch (e){ tutorial1.files = {} }
 
-tutorial1.showWarnings = function() {
-    !navigator.cookieEnabled     && $("#cookie-warning").show();
-    window['localStorage']==null && $("#storage-warning").show();
-}
-
 // A pre-command hook which can prevent the command from being run if
 // it returns true.
 tutorial1.preCommandHook = function(line,report){
@@ -366,7 +361,6 @@ String.prototype.trim = function() {
 
 // Main entry point.
 $(function(){
-    tutorial1.showWarnings();
     tutorial1.makeController();
     tutorial1.makeGuide();
     tutorial1.activeUsers();
