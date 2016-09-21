@@ -82,8 +82,8 @@ tutorial11.pages.list =
 //                If they used a division
                 if (hasdiv) {
                 	return '<p>'+
-                	"When you use the '/' sign for division, Haskell will treat the numbers as real rather than integer."+next_step;
-                	+'</p>';
+                	"When you use the '/' sign for division, Haskell will treat the numbers as real rather than integer."
+                        +'</p>'+next_step;
                 } else {
                 	return '<p>'+
                 	"What you typed does not seem to be a simple integer arithmetic expression, but it looks like it worked all right!"
