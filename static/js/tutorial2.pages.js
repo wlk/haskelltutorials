@@ -221,9 +221,10 @@ tutorial2.pages.list =
             var complied = /Bool/.test(result.type);            
             var rexpr = result.expr.replace(/^let\s.+\sin\s+/, "");
             var valid = /True|False/.test(result.value);
+            var outcome = /True/.test(result.value)
             var matches = rexpr.match(/^\s*elem\s+([0-9]+) (\[[^\]]*\])/);
 	    var element = matches[1];
-            var msg="<p>You see that element " + element + " is " + ((result.value)?"":" not ") + "part of the list.</p>";
+            var msg="<p>You see that element " + element + " is " + ((valid&&outcome)?"":" not ") + "part of the list.</p>";
 	    var next_step = msg + "<p>The elem function can be written infix, like an arithmetic operator, by enclosing its name in backquotes ``. Try <code>3 `elem` [1, 2, 3, 4, 5]</code>."
             return next_step;
 	      
