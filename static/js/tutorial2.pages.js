@@ -199,7 +199,7 @@ tutorial2.pages.list =
 	{
 	  trigger:tutorial2.pages.isBool,
 	  guide:function(result) {
-	    return "<p> Since strings are lists of characters in Haskell, we can do the same kinds of comparison operations on strings. Check whether Aadvark comes before Aaronic in the dictionary with this code: <code>&quot;Aardvark&quot; &lt; &quot;Aaronic&quot;";
+	    return "<p> Since strings are lists of characters in Haskell, we can do the same kinds of comparison operations on strings. Check whether Aardvark comes before Aaronic in the dictionary with this code: <code>&quot;Aardvark&quot; &lt; &quot;Aaronic&quot;";
 	  }
 	},
 // should we talk about string comparisons, 
