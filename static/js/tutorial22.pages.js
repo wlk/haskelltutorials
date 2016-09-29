@@ -235,7 +235,7 @@ tutorial22.pages.list =
             var msg = "<p>This if expression returned "+result.value+", as you might expect.</p>";
             var next_step =
 		"<p>The Haskell if expression is equivalent to the <tt>?:</tt> ternary operator in C-like languages. The first subexpression (after the if) must have type Bool, then the subsequent two subexpressions (after then and else respectively) must have the same type as each other.</p>"
-                + "<p>What happens if we supply a non-Boolean value for the first subexpression? Trye <code>if 1 then 0 else -1</code>.</p>";
+                + "<p>What happens if we supply a non-Boolean value for the first subexpression? Try <code>if 1 then 0 else -1</code>.</p>";
 	      tutorial22.continueOnError = true;
             return msg+next_step;
           }
