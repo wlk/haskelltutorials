@@ -165,7 +165,7 @@ tutorial32.pages.list =
         	  '<ul><li><tt>foldl</tt> expects a function that takes as first argument the accumulator and as second argument the element of the list.'+
         	  ' The type signature is <pre>foldl ::  (a -> b -> a) -> a -> [b] -> a</pre></li>'+
         	  '<li><tt>foldr</tt> expects them in the opposite order, its type signature is <pre>foldr ::  (a -> b -> b) -> b -> [a] -> b</pre></li></ul>'+
-        	  '<p>So go ahead, change the order and try again. What do you get?</p> <code>foldl (\\acc elt -> elt:acc) "" "Reversing a string"</code></p>';
+        	  '<p>So go ahead, change the order and try again. What do you get?</p> <code>foldr (\\acc elt -> elt:acc) "" "Reversing a string"</code></p>';
         }
         },
         
